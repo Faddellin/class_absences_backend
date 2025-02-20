@@ -1,0 +1,6 @@
+@class_absences_backend_HostAddress = http://localhost:5220
+
+GET {{class_absences_backend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
