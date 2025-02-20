@@ -12,4 +12,5 @@
 /dataSources/
 /dataSources.local.xml
 /.idea/
+/.vs/
 /WebAPI/appsettings.json
