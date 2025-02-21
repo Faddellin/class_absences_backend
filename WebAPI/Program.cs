@@ -1,3 +1,5 @@
+using class_absences_backend.Middlewares;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +8,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseCustomExtensionsHandler();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -31,10 +35,14 @@ app.MapGet("/weatherforecast", () =>
                     summaries[Random.Shared.Next(summaries.Length)]
                 ))
             .ToArray();
+        throw new Exception("погоды не будет, она приняла ислам");
         return forecast;
     })
     .WithName("GetWeatherForecast")
     .WithOpenApi();
+
+
+
 
 app.Run();
 

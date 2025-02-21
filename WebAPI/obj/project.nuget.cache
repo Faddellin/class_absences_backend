@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "PdHYRfdNT37sP4EFf74cT331IGYuUP6JWApS6+fdmP4zpyqRUtzElvSdJ0lyX5pKJdakM7+SMnOgpj5iamRpvA==",
+  "dgSpecHash": "FOMeqs036W893ZoT+waGrNCRuFY5H8wREduost+7EcktYpwZ0jUXLCmX62tmXoU42Ps3M9qWvfKRtP1y80jCMQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\Faddellin\\MyCodes\\class_absences_backend\\WebAPI\\WebAPI.csproj",
   "expectedPackageFiles": [
@@ -43,6 +43,7 @@
     "C:\\Users\\Faddellin\\.nuget\\packages\\microsoft.identitymodel.tokens\\8.5.0\\microsoft.identitymodel.tokens.8.5.0.nupkg.sha512",
     "C:\\Users\\Faddellin\\.nuget\\packages\\microsoft.openapi\\1.4.3\\microsoft.openapi.1.4.3.nupkg.sha512",
     "C:\\Users\\Faddellin\\.nuget\\packages\\mono.texttemplating\\3.0.0\\mono.texttemplating.3.0.0.nupkg.sha512",
+    "C:\\Users\\Faddellin\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\Faddellin\\.nuget\\packages\\npgsql\\9.0.2\\npgsql.9.0.2.nupkg.sha512",
     "C:\\Users\\Faddellin\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\9.0.3\\npgsql.entityframeworkcore.postgresql.9.0.3.nupkg.sha512",
     "C:\\Users\\Faddellin\\.nuget\\packages\\swashbuckle.aspnetcore\\6.4.0\\swashbuckle.aspnetcore.6.4.0.nupkg.sha512",
