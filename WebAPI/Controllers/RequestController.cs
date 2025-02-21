@@ -2,6 +2,8 @@
 using BusinessLogic.ServiceInterfaces;
 using BusinessLogic.Services;
 using Common.DbModels;
+using Common.DtoModels;
+using Common.DtoModels.Request;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
@@ -23,42 +25,33 @@ namespace BusinessLogic.Controllers
             _requestService = requestService;
         }
 
+
         [Authorize]
         [HttpPost]
         [Route("request")]
         public async Task<IActionResult> CreateRequest(
-        [FromQuery] DateTime AbsenceDateFrom,
-        [FromQuery] DateTime AbsenceDateTo,
-        [FromQuery] string lessonName)
+                [FromBody] RequestCreateModel requestCreateModel,
+                [FromBody] Guid? reasonId)
         {
-            try
-            {
-                //await EnsureTokenIsValid();
 
-                if (AbsenceDateFrom < AbsenceDateTo)
-                {
-                    throw new ArgumentException("AbsenceDateFrom can't be lower than AbsenceDateTo");
-                }
+            Guid requestId = await _requestService.CreateRequest(requestCreateModel,new Guid("4e19c13d-cab0-467b-8776-423eaee61f2aZ"), reasonId);
 
-                var list = await _consultationService.GetInspectionsList(
-                    grouped == true,
-                    icdRoots.Count == 0 ? new List<Guid>() : icdRoots,
-                    page,
-                    size);
-                return Ok(list);
-            }
-            catch (UnauthorizedAccessException)
-            {
-                return Unauthorized();
-            }
-            catch (IncorrectModelException ex)
-            {
-                return BadRequest(new ResponseModel
-                {
-                    Status = "Error",
-                    Message = ex.Message
-                });
-            }
+            return Ok(requestId);
+        }
+
+
+        [Authorize]
+        [HttpGet]
+        [Route("request")]
+        public async Task<IActionResult> GetRequestsByFilters(
+                [FromBody] SortType sortType,
+                [FromBody] RequestStatus? requestStatus,
+                [FromBody] string? userName)
+        {
+
+            RequestListModel requestListModel = await _requestService.GetAllRequests(sortType, requestStatus, userName);
+
+            return Ok(requestListModel);
         }
 
     }

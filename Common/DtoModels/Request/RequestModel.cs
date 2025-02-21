@@ -2,14 +2,14 @@ using Common.DtoModels.Request;
 
 namespace Common.DbModels;
 
-public class RequestEntity
+public class RequestModel
 {
-    public Guid Id { get; set; }
     public DateTime CreateTime { get; set; }
-    public ReasonModel? Reason { get; set; }
+    public Guid Id { get; set; }
+    public Guid? ReasonId { get; set; }
     public RequestStatus Status { get; set; }
-    public UserEntity User { get; set; }
-    public string LessonName { get; set; }
+    public string Username {  get; set; }
+    public UserType UserType { get; set; }
     public DateTime AbsenceDateFrom { get; set; }
     public DateTime AbsenceDateTo { get; set; }
 }

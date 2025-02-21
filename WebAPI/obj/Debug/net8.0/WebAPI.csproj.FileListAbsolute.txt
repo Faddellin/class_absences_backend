@@ -271,7 +271,6 @@ C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI
 C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.AssemblyInfoInputs.cache
 C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.AssemblyInfo.cs
 C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.csproj.CoreCompileInputs.cache
-C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.sourcelink.json
 C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\obj\Debug\net8.0\staticwebassets.build.json
