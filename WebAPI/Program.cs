@@ -12,6 +12,7 @@ builder.Services.AddDbContext<AppDbContext>(
     {
         options.UseNpgsql(configuration.GetConnectionString(nameof(AppDbContext)));
     });
+builder.Services.AddBusinessLogic();
 
 var app = builder.Build();
 
@@ -24,6 +25,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.MapControllers();
 
 app.Run();
