@@ -1,9 +1,8 @@
 ﻿namespace Common.DbModels;
 
-public class Response(string status,
-    string message)
+public class Response
 {
-    public string status { get; set; } = status;
+    public string status { get; set; }
 
-    public string message { get; set; } = message;
+    public string message { get; set; }
 }

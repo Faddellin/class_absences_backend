@@ -34,7 +34,7 @@ namespace class_absences_backend.Middlewares
             context.Response.ContentType = "application/json";
 
             return context.Response.WriteAsync(JsonConvert.SerializeObject(
-                new Response(statusCode.ToString(), ex.Message))
+                new Response() { status = "Error", message = ex.Message })
             );
 
         }

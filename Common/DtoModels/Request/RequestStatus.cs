@@ -1,4 +1,4 @@
-namespace Common.DbModels;
+namespace Common.DtoModels.Request;
 
 public enum RequestStatus
 {

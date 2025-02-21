@@ -298,3 +298,5 @@ C:\Users\а\RiderProjects\class_absences_backend\WebAPI\bin\Debug\net8.0\Common.
 C:\Users\а\RiderProjects\class_absences_backend\WebAPI\bin\Debug\net8.0\BusinessLogic.pdb
 C:\Users\а\RiderProjects\class_absences_backend\WebAPI\bin\Debug\net8.0\Common.pdb
 C:\Users\а\RiderProjects\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.sourcelink.json
+C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\bin\Debug\net8.0\BusinessLogic.dll
+C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\bin\Debug\net8.0\BusinessLogic.pdb
