@@ -1,18 +1,13 @@
 namespace Common.DbModels;
 
-public class RequestEntity(
-    DateTime createTime,
-    ReasonEntity reason,
-    UserEntity user,
-    string lessonName,
-    DateTime absenceDateFrom,
-    DateTime absenceDateTo)
+public class RequestEntity
 {
-    public DateTime CreateTime { get; set; } = createTime;
-    public ReasonEntity Reason { get; set; } = reason;
+    public Guid Id { get; set; }
+    public DateTime CreateTime { get; set; }
+    public ReasonEntity Reason { get; set; }
     public RequestStatus Status { get; set; } = RequestStatus.Checking;
-    public UserEntity User { get; set; } = user;
-    public string LessonName { get; set; } = lessonName;
-    public DateTime AbsenceDateFrom { get; set; } = absenceDateFrom;
-    public DateTime AbsenceDateTo { get; set; } = absenceDateTo;
+    public UserEntity User { get; set; }
+    public string LessonName { get; set; }
+    public DateTime AbsenceDateFrom { get; set; }
+    public DateTime AbsenceDateTo { get; set; }
 }

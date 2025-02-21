@@ -292,3 +292,9 @@ C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\bin\Debug\net8.0\appset
 C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\bin\Debug\net8.0\Newtonsoft.Json.dll
 C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\bin\Debug\net8.0\Common.dll
 C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\bin\Debug\net8.0\Common.pdb
+C:\Users\а\RiderProjects\class_absences_backend\WebAPI\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\а\RiderProjects\class_absences_backend\WebAPI\bin\Debug\net8.0\BusinessLogic.dll
+C:\Users\а\RiderProjects\class_absences_backend\WebAPI\bin\Debug\net8.0\Common.dll
+C:\Users\а\RiderProjects\class_absences_backend\WebAPI\bin\Debug\net8.0\BusinessLogic.pdb
+C:\Users\а\RiderProjects\class_absences_backend\WebAPI\bin\Debug\net8.0\Common.pdb
+C:\Users\а\RiderProjects\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.sourcelink.json

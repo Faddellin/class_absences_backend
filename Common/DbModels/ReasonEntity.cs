@@ -2,16 +2,7 @@ namespace Common.DbModels;
 
 public class ReasonEntity
 {
-    public ReasonEntity(List<byte[]> images, DateTime dateFrom, DateTime dateTo, string description, ReasonType reasonType, UserEntity user)
-    {
-        Images = images;
-        DateFrom = dateFrom;
-        DateTo = dateTo;
-        Description = description;
-        ReasonType = reasonType;
-        User = user;
-    }
-
+    public Guid Id { get; set; }
     public List<byte[]> Images { get; set; }
     public DateTime DateFrom { get; set; }
     public DateTime DateTo { get; set; }
