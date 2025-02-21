@@ -1,4 +1,5 @@
 ﻿using Common.DbModels;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 namespace class_absences_backend.Middlewares
 {
@@ -21,7 +22,7 @@ namespace class_absences_backend.Middlewares
             }
             catch (Exception e)
             {
-                //_logger.LogError();
+                _logger.LogError("Error Message: {exceptionMessage}, Time: {occurrenceTime}",e.Message,DateTime.Now);
                 await CreateExceptionMessage(context, e, 500);
             }
 
@@ -31,7 +32,10 @@ namespace class_absences_backend.Middlewares
         {
             context.Response.StatusCode = statusCode;
             context.Response.ContentType = "application/json";
-            return context.Response.WriteAsync(JsonConvert.SerializeObject(new Response() { status = statusCode.ToString(), message = ex.Message}));
+
+            return context.Response.WriteAsync(JsonConvert.SerializeObject(
+                new Response(statusCode.ToString(), ex.Message))
+            );
 
         }
     }
