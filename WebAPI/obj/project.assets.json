@@ -4006,8 +4006,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\Faddellin\\MyCodes\\class_absences_backend\\Common\\Common.csproj": {
-              "projectPath": "C:\\Users\\Faddellin\\MyCodes\\class_absences_backend\\Common\\Common.csproj"
+            "C:\\Users\\а\\RiderProjects\\class_absences_backend\\Common\\Common.csproj": {
+              "projectPath": "C:\\Users\\а\\RiderProjects\\class_absences_backend\\Common\\Common.csproj"
             }
           }
         }
