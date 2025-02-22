@@ -1,7 +1,6 @@
 ﻿namespace Common.DtoModels;
 
-public class Response(string status,
-    string message)
+public class Response
 {
     public string Status { get; set; }
 

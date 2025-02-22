@@ -18,11 +18,23 @@ namespace BusinessLogic.Controllers
     {
 
         private readonly IRequestService _requestService;
-        //private readonly ITokenService _tokenService;
+        private readonly ITokenService _tokenService;
 
-        public RequestController(IRequestService requestService)
+        public RequestController(IRequestService requestService, ITokenService tokenService)
         {
             _requestService = requestService;
+            _tokenService = tokenService;
+        }
+
+        private async Task<Guid> EnsureTokenIsValid()
+        {
+            var token = Request.Headers.Authorization.ToString().Replace("Bearer ", "");
+            if (!await _tokenService.IsTokenValid(token))
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            return await _tokenService.GetUserIdFromToken(token);
         }
 
         /// <summary>
@@ -35,27 +47,35 @@ namespace BusinessLogic.Controllers
                 [FromBody] RequestCreateModel requestCreateModel)
         {
 
+            var userId = await EnsureTokenIsValid();
+
             Guid requestId = await _requestService.CreateRequest(requestCreateModel, userId);
 
             return Ok(requestId);
         }
 
+        [Authorize]
         [HttpPut("/{requestId}")]
         public async Task<IActionResult> EditRequest(
                 [FromBody] RequestCreateModel requestCreateModel,
                 [FromRoute] Guid requestId)
         {
 
+            var userId = await EnsureTokenIsValid();
+
             await _requestService.EditRequest(requestCreateModel, requestId, userId);
 
             return Ok();
         }
 
-        [HttpPut("/{requestId}/changeReasonOn/{reasonId}")]
+        [Authorize]
+        [HttpPut("/reason/{requestId}")]
         public async Task<IActionResult> ChangeRequestReason(
                 [FromRoute] Guid requestId,
-                [FromRoute] Guid reasonId)
+                [FromQuery] Guid reasonId)
         {
+
+            var userId = await EnsureTokenIsValid();
 
             await _requestService.ChangeRequestReason(reasonId, requestId, userId);
 
@@ -72,6 +92,8 @@ namespace BusinessLogic.Controllers
                 [FromQuery] DateTime? dateTo)
         {
 
+            var userId = await EnsureTokenIsValid();
+
             RequestListModel requestListModel = await _requestService.GetAllRequests(sortType, requestStatus, userName, dateFrom, dateTo, userId);
 
             return Ok(requestListModel);
@@ -83,13 +105,27 @@ namespace BusinessLogic.Controllers
                 [FromQuery] RequestStatus? requestStatus,
                 [FromQuery] DateTime? dateFrom,
                 [FromQuery] DateTime? dateTo,
-                [FromQuery] Guid targetUserId)
+                [FromRoute] Guid targetUserId)
         {
+
+            var userId = await EnsureTokenIsValid();
 
             RequestListModel requestListModel = await _requestService.GetUserRequests(sortType, requestStatus, dateFrom, dateTo, userId, targetUserId);
 
             return Ok(requestListModel);
         }
 
+
+        [HttpGet("/{requestId}")]
+        public async Task<IActionResult> GetRequest(
+                [FromRoute] Guid requestId)
+        {
+
+            var userId = await EnsureTokenIsValid();
+
+            RequestModel requestModel = await _requestService.GetRequest(requestId, userId);
+
+            return Ok(requestModel);
+        }
     }
 }

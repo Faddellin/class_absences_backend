@@ -35,10 +35,7 @@ public class RequestService : IRequestService
             throw new KeyNotFoundException("Reason is not found");
         }
 
-        if (userEntity == null)
-        {
-            throw new KeyNotFoundException("User is not found");
-        }
+        throwIfObjIsNull(userEntity);
 
         if (reasonEntity != null)
         {
@@ -83,16 +80,9 @@ public class RequestService : IRequestService
             .Include(o => o.User)
             .FirstOrDefaultAsync(o => o.Id == requestId);
 
-        if (userEntity == null)
-        {
-            throw new KeyNotFoundException("User is not found");
-        }
 
-        if (requestEntity == null)
-        {
-            throw new KeyNotFoundException("Request is not found");
-
-        }
+        throwIfObjIsNull(userEntity);
+        throwIfObjIsNull(requestEntity);
 
         if (noRightsUsers.Contains(userEntity.UserType) ||
             (userEntity != requestEntity.User && !allRightsUsers.Contains(userEntity.UserType)))
@@ -121,28 +111,19 @@ public class RequestService : IRequestService
     {
         UserEntity? userEntity = await _appDbContext.Users.FirstOrDefaultAsync(o => o.Id == userId);
 
-        if (userEntity == null)
-        {
-            throw new KeyNotFoundException("User is not found");
-        }
+        throwIfObjIsNull(userEntity);
 
         ReasonEntity? reasonEntity = await _appDbContext.Reasons
             .Include(o => o.User)
             .FirstOrDefaultAsync(o => o.Id == reasonId);
 
-        if (reasonEntity == null)
-        {
-            throw new KeyNotFoundException("Reason is not found");
-        }
+        throwIfObjIsNull(reasonEntity);
 
         RequestEntity? requestEntity = await _appDbContext.Requests
             .Include(o => o.User)
             .FirstOrDefaultAsync(o => o.Id == requestId);
 
-        if (requestEntity == null)
-        {
-            throw new KeyNotFoundException("Request is not found");
-        }
+        throwIfObjIsNull(requestEntity);
 
         if (noRightsUsers.Contains(userEntity.UserType) ||
             (userEntity != requestEntity.User || userEntity != reasonEntity.User) && !allRightsUsers.Contains(userEntity.UserType))
@@ -162,10 +143,7 @@ public class RequestService : IRequestService
     {
         UserEntity? userEntity = await _appDbContext.Users.FirstOrDefaultAsync(o => o.Id == userId);
 
-        if (userEntity == null)
-        {
-            throw new KeyNotFoundException("User is not found");
-        }
+        throwIfObjIsNull(userEntity);
 
         if (!allRightsUsers.Contains(userEntity.UserType))
         {
@@ -223,15 +201,8 @@ public class RequestService : IRequestService
             .FirstOrDefaultAsync(o => o.Id == requestId);
 
 
-        if (userEntity == null)
-        {
-            throw new KeyNotFoundException("User is not found");
-        }
-
-        if (requestEntity == null)
-        {
-            throw new KeyNotFoundException("Request is not found");
-        }
+        throwIfObjIsNull(userEntity);
+        throwIfObjIsNull(requestEntity);
 
         if (noRightsUsers.Contains(userEntity.UserType) ||
             (userEntity != requestEntity.User && !allRightsUsers.Contains(userEntity.UserType)))
@@ -262,15 +233,8 @@ public class RequestService : IRequestService
 
         UserEntity? targetUserEntity = await _appDbContext.Users.FirstOrDefaultAsync(o => o.Id == targetUserId);
 
-        if (userEntity == null)
-        {
-            throw new KeyNotFoundException("User is not found");
-        }
-
-        if (targetUserEntity == null)
-        {
-            throw new KeyNotFoundException("TargetUser is not found");
-        }
+        throwIfObjIsNull(userEntity);
+        throwIfObjIsNull(targetUserEntity);
 
         if (noRightsUsers.Contains(userEntity.UserType) ||
             (userEntity != targetUserEntity && !allRightsUsers.Contains(userEntity.UserType)))
@@ -341,6 +305,14 @@ public class RequestService : IRequestService
         }
 
         return requestEntitySorted;
+    }
+
+    private void throwIfObjIsNull<Object>(Object? obj)
+    {
+        if (obj == null)
+        {
+            throw new KeyNotFoundException($"{typeof(Object).Name} is not found");
+        }
     }
 
 }
