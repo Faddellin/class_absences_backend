@@ -43,8 +43,9 @@ namespace BusinessLogic.Migrations
                         .IsRequired()
                         .HasColumnType("bytea[]");
 
-                    b.Property<int>("ReasonType")
-                        .HasColumnType("integer");
+                    b.Property<string>("ReasonType")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -78,8 +79,9 @@ namespace BusinessLogic.Migrations
                     b.Property<Guid>("ReasonId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
@@ -111,8 +113,9 @@ namespace BusinessLogic.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("UserType")
-                        .HasColumnType("integer");
+                    b.Property<string>("UserType")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 

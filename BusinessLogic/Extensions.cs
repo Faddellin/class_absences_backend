@@ -9,6 +9,7 @@ public static class Extensions
     public static IServiceCollection AddBusinessLogic(this IServiceCollection serviceCollection)
     {
         serviceCollection.AddScoped<IUserService, UserService>();
+        serviceCollection.AddSingleton<ITokenService, TokenService>();
         return serviceCollection;
     }
 }
