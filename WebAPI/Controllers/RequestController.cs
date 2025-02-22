@@ -12,7 +12,7 @@ namespace BusinessLogic.Controllers
 {
 
     [ApiController]
-    [Route("api")]
+    [Route("api/request")]
 
     public class RequestController : ControllerBase
     {
@@ -25,31 +25,68 @@ namespace BusinessLogic.Controllers
             _requestService = requestService;
         }
 
-
-        [Authorize]
+        /// <summary>
+        /// Create request, if the reason is specified, then it must be the reason for this user
+        /// </summary>
+        /// <param name="requestCreateModel">Create model for request</param>
+        /// <response code="200">Patients inspections list retrieved</response>
         [HttpPost]
-        [Route("request")]
         public async Task<IActionResult> CreateRequest(
-                [FromBody] RequestCreateModel requestCreateModel,
-                [FromBody] Guid? reasonId)
+                [FromBody] RequestCreateModel requestCreateModel)
         {
 
-            Guid requestId = await _requestService.CreateRequest(requestCreateModel,new Guid("4e19c13d-cab0-467b-8776-423eaee61f2aZ"), reasonId);
+            Guid requestId = await _requestService.CreateRequest(requestCreateModel, userId);
 
             return Ok(requestId);
         }
 
-
-        [Authorize]
-        [HttpGet]
-        [Route("request")]
-        public async Task<IActionResult> GetRequestsByFilters(
-                [FromBody] SortType sortType,
-                [FromBody] RequestStatus? requestStatus,
-                [FromBody] string? userName)
+        [HttpPut("/{requestId}")]
+        public async Task<IActionResult> EditRequest(
+                [FromBody] RequestCreateModel requestCreateModel,
+                [FromRoute] Guid requestId)
         {
 
-            RequestListModel requestListModel = await _requestService.GetAllRequests(sortType, requestStatus, userName);
+            await _requestService.EditRequest(requestCreateModel, requestId, userId);
+
+            return Ok();
+        }
+
+        [HttpPut("/{requestId}/changeReasonOn/{reasonId}")]
+        public async Task<IActionResult> ChangeRequestReason(
+                [FromRoute] Guid requestId,
+                [FromRoute] Guid reasonId)
+        {
+
+            await _requestService.ChangeRequestReason(reasonId, requestId, userId);
+
+            return Ok();
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetRequestsByFilters(
+                [FromQuery] SortType sortType,
+                [FromQuery] RequestStatus? requestStatus,
+                [FromQuery] string? userName,
+                [FromQuery] DateTime? dateFrom,
+                [FromQuery] DateTime? dateTo)
+        {
+
+            RequestListModel requestListModel = await _requestService.GetAllRequests(sortType, requestStatus, userName, dateFrom, dateTo, userId);
+
+            return Ok(requestListModel);
+        }
+
+        [HttpGet("/user/{targetUserId}")]
+        public async Task<IActionResult> GetUserRequests(
+                [FromQuery] SortType sortType,
+                [FromQuery] RequestStatus? requestStatus,
+                [FromQuery] DateTime? dateFrom,
+                [FromQuery] DateTime? dateTo,
+                [FromQuery] Guid targetUserId)
+        {
+
+            RequestListModel requestListModel = await _requestService.GetUserRequests(sortType, requestStatus, dateFrom, dateTo, userId, targetUserId);
 
             return Ok(requestListModel);
         }

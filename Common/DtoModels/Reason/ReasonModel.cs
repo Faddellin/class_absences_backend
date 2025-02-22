@@ -1,3 +1,5 @@
+using Common.DtoModels.Reason;
+
 namespace Common.DbModels;
 
 public class ReasonModel

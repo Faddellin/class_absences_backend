@@ -8,5 +8,7 @@ namespace Common.DtoModels.Request
         public DateTime AbsenceDateTo { get; set; }
 
         public string LessonName { get; set; }
+
+        public Guid? reasonId { get; set; }
     }
 }

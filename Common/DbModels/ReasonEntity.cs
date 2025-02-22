@@ -2,7 +2,7 @@ using Common.DtoModels.Reason;
 
 namespace Common.DbModels;
 
-public class ReasonModel
+public class ReasonEntity
 {
     public Guid Id { get; set; }
     public List<byte[]> Images { get; set; }

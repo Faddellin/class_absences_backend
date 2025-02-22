@@ -6,7 +6,7 @@ public class RequestEntity
 {
     public Guid Id { get; set; }
     public DateTime CreateTime { get; set; }
-    public ReasonModel? Reason { get; set; }
+    public ReasonEntity? Reason { get; set; }
     public RequestStatus Status { get; set; }
     public UserEntity User { get; set; }
     public string LessonName { get; set; }
