@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BusinessLogic.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250221103244_Initial-migration")]
-    partial class Initialmigration
+    [Migration("20250222081322_Trying fix db bug with DateTime")]
+    partial class TryingfixdbbugwithDateTime
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -78,7 +78,7 @@ namespace BusinessLogic.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("ReasonId")
+                    b.Property<Guid?>("ReasonId")
                         .HasColumnType("uuid");
 
                     b.Property<int>("Status")
@@ -137,9 +137,7 @@ namespace BusinessLogic.Migrations
                 {
                     b.HasOne("Common.DbModels.ReasonEntity", "Reason")
                         .WithMany()
-                        .HasForeignKey("ReasonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ReasonId");
 
                     b.HasOne("Common.DbModels.UserEntity", "User")
                         .WithMany()

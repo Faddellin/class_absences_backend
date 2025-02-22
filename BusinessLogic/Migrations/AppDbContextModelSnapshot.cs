@@ -76,7 +76,7 @@ namespace BusinessLogic.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("ReasonId")
+                    b.Property<Guid?>("ReasonId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Status")
@@ -137,9 +137,7 @@ namespace BusinessLogic.Migrations
                 {
                     b.HasOne("Common.DbModels.ReasonEntity", "Reason")
                         .WithMany()
-                        .HasForeignKey("ReasonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ReasonId");
 
                     b.HasOne("Common.DbModels.UserEntity", "User")
                         .WithMany()

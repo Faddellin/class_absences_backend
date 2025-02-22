@@ -1,3 +1,4 @@
+using Common.DbModels;
 using System.ComponentModel.DataAnnotations;
 
 namespace Common.DtoModels.User;

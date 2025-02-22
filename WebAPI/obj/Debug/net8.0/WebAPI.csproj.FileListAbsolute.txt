@@ -271,7 +271,6 @@ C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI
 C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.AssemblyInfoInputs.cache
 C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.AssemblyInfo.cs
 C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.csproj.CoreCompileInputs.cache
-C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.sourcelink.json
 C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\obj\Debug\net8.0\staticwebassets.build.json
@@ -298,5 +297,5 @@ C:\Users\а\RiderProjects\class_absences_backend\WebAPI\bin\Debug\net8.0\Common.
 C:\Users\а\RiderProjects\class_absences_backend\WebAPI\bin\Debug\net8.0\BusinessLogic.pdb
 C:\Users\а\RiderProjects\class_absences_backend\WebAPI\bin\Debug\net8.0\Common.pdb
 C:\Users\а\RiderProjects\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.sourcelink.json
-C:\Users\а\RiderProjects\class_absences_backend\WebAPI\bin\Debug\net8.0\WebAPI.xml
-C:\Users\а\RiderProjects\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.xml
+C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\bin\Debug\net8.0\BusinessLogic.dll
+C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\bin\Debug\net8.0\BusinessLogic.pdb
