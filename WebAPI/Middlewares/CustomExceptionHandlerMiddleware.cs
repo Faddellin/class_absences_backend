@@ -1,5 +1,4 @@
-﻿using Common.DbModels;
-using Microsoft.Extensions.Logging;
+﻿using Common.DtoModels;
 using Newtonsoft.Json;
 namespace class_absences_backend.Middlewares
 {
@@ -34,7 +33,11 @@ namespace class_absences_backend.Middlewares
             context.Response.ContentType = "application/json";
 
             return context.Response.WriteAsync(JsonConvert.SerializeObject(
-                new Response(statusCode.ToString(), ex.Message))
+                new Response
+                {
+                    Status = statusCode.ToString(),
+                    Message = ex.Message
+                })
             );
 
         }

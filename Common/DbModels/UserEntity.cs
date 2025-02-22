@@ -1,4 +1,6 @@
-﻿namespace Common.DbModels;
+﻿using Common.DtoModels;
+
+namespace Common.DbModels;
 
 public class UserEntity
 {

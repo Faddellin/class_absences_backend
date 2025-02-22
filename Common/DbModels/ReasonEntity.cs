@@ -1,3 +1,5 @@
+using Common.DtoModels;
+
 namespace Common.DbModels;
 
 public class ReasonEntity
