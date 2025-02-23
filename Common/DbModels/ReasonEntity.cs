@@ -5,7 +5,7 @@ namespace Common.DbModels;
 public class ReasonEntity
 {
     public Guid Id { get; set; }
-    public List<byte[]> Images { get; set; }
+    public List<string?>? Images { get; set; }
     public DateTime DateFrom { get; set; }
     public DateTime DateTo { get; set; }
     public string Description { get; set; }

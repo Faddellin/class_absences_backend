@@ -1,3 +1,5 @@
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Text.RegularExpressions;
 using BusinessLogic.ServiceInterfaces;
 using Common;
@@ -117,7 +119,7 @@ public class UserController : ControllerBase
     {
         try
         {
-            var userId = await EnsureTokenIsValid();
+            await EnsureTokenIsValid();
             var token = Request.Headers.Authorization.ToString().Replace("Bearer ", "");
             await _tokenService.AddInvalidToken(token);
             return Ok(new ResponseModel

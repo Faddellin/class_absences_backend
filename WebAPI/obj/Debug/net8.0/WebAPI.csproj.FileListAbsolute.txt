@@ -304,3 +304,7 @@ C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\bin\Debug\net8.0\WebAPI
 C:\Users\а\RiderProjects\class_absences_backend\WebAPI\bin\Debug\net8.0\WebAPI.xml
 C:\Users\а\RiderProjects\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.xml
 C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\bin\Debug\net8.0\appsettings.json
+C:\Users\а\RiderProjects\class_absences_backend\WebAPI\bin\Debug\net8.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\а\RiderProjects\class_absences_backend\WebAPI\bin\Debug\net8.0\System.Drawing.Common.dll
+C:\Users\а\RiderProjects\class_absences_backend\WebAPI\bin\Debug\net8.0\System.Private.Windows.Core.dll
+C:\Users\а\RiderProjects\class_absences_backend\WebAPI\bin\Debug\net8.0\runtimes\win\lib\net8.0\Microsoft.Win32.SystemEvents.dll

@@ -4,6 +4,6 @@ namespace BusinessLogic.ServiceInterfaces;
 
 public interface IRefreshTokenService
 {
-    Task SaveRefreshToken(UserEntity user, string refreshToken, DateTime expiryDate);
-    Task<UserEntity?> ValidateRefreshToken(Guid userId, string refreshToken);
+    public Task SaveRefreshToken(UserEntity user, string refreshToken, DateTime expiryDate);
+    public Task<UserEntity?> ValidateRefreshToken(Guid userId, string refreshToken);
 }
