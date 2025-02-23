@@ -52,7 +52,8 @@ namespace class_absences_backend.Middlewares
         {
 
             var token = context.Request.Headers.Authorization.ToString().Replace("Bearer ", "");
-            var userId = tokenService.GetUserIdFromToken(token).Result;
+
+            var userId = tokenService.GetUserIdFromToken(token);
 
             logger.LogError("Error Message: {exceptionMessage}, Time: {occurrenceTime}, User: {userId}", ex.Message, DateTime.Now, userId);
 

@@ -75,7 +75,7 @@ public class TokenService : ITokenService
 
     public async Task<Guid> GetUserIdFromToken(string strToken)
     {
-        var payload = await DecodeTokenPayload(strToken);
+        var payload = DecodeTokenPayload(strToken);
         if (payload == null)
         {
             throw new KeyNotFoundException("Incorrect token");
@@ -97,7 +97,7 @@ public class TokenService : ITokenService
 
     public async Task<Guid> GetTokenIdFromToken(string strToken)
     {
-        var payload = await DecodeTokenPayload(strToken);
+        var payload = DecodeTokenPayload(strToken);
         if (payload == null)
         {
             throw new KeyNotFoundException("Incorrect token");
@@ -116,12 +116,11 @@ public class TokenService : ITokenService
         return tokenId;
     }
 
-    public async Task<TokenPayload?> DecodeTokenPayload(string strToken)
+    public TokenPayload? DecodeTokenPayload(string strToken)
     {
         var decodedToken = Jose.JWT.Payload(strToken);
         var payload = JsonSerializer.Deserialize<TokenPayload>(decodedToken);
 
-        await Task.CompletedTask;
         return payload;
     }
 
