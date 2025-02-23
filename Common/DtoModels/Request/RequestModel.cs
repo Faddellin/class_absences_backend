@@ -12,6 +12,9 @@ public class RequestModel
     public Guid Id { get; set; }
     public Guid? ReasonId { get; set; }
     public RequestStatus Status { get; set; }
+    public string FirstName { get; set; }
+    public string? MiddleName { get; set; }
+    public string LastName { get; set; }
     
     [Required]
     public string Username {  get; set; }

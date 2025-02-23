@@ -1,11 +1,15 @@
 using System.Collections.Concurrent;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using BusinessLogic.ServiceInterfaces;
 using Common;
+using Common.DbModels;
+using Common.DtoModels.Others;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BusinessLogic.Services;
@@ -14,13 +18,15 @@ public class TokenService : ITokenService
 {
     private readonly IConfiguration _configuration;
     private readonly ConcurrentDictionary<Guid, string>? _invalidTokens = new();
+    private readonly IServiceProvider _serviceProvider;
 
-    public TokenService(IConfiguration configuration)
+    public TokenService(IConfiguration configuration, IServiceProvider serviceProvider)
     {
         _configuration = configuration;
+        _serviceProvider = serviceProvider;
     }
 
-    public async Task<string> CreateToken(Guid userId)
+    public async Task<string> CreateToken(UserEntity user)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var secret = _configuration
@@ -40,8 +46,9 @@ public class TokenService : ITokenService
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity([
-                new Claim("user_id", userId.ToString()),
-                new Claim("token_id", Guid.NewGuid().ToString())
+                new Claim("user_id", user.Id.ToString()),
+                new Claim("token_id", Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Role, user.UserType.ToString())
             ]),
             Expires = DateTime.UtcNow.AddMinutes(expireTime),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
@@ -55,6 +62,15 @@ public class TokenService : ITokenService
 
         await Task.CompletedTask;
         return strToken;
+    }
+
+    public async Task<TokenResponseModel> CreateTokenResponse(UserEntity user)
+    {
+        return new TokenResponseModel
+        {
+            AccessToken = await CreateToken(user),
+            RefreshToken = await GenerateAndSaveRefreshToken(user)
+        };
     }
 
     public async Task<Guid> GetUserIdFromToken(string strToken)
@@ -129,5 +145,43 @@ public class TokenService : ITokenService
     {
         await Task.CompletedTask;
         _invalidTokens.Clear();
+    }
+
+    private string GenerateRefreshToken()
+    {
+        var randomNumber = new byte[32];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
+    }
+
+    public async Task<string> GenerateAndSaveRefreshToken(UserEntity user)
+    {
+        using var scope = _serviceProvider.CreateScope();
+        var refreshTokenService = scope.ServiceProvider.GetRequiredService<IRefreshTokenService>();
+        var refreshToken = GenerateRefreshToken();
+        await refreshTokenService.SaveRefreshToken(user, refreshToken,
+        DateTime.UtcNow.AddDays(_configuration
+            .GetSection("RefreshToken:ExpireInDays")
+            .Get<int>()));
+        return refreshToken;
+    }
+
+    public async Task<UserEntity?> ValidateRefreshToken(Guid userId, string refreshToken)
+    {
+        using var scope = _serviceProvider.CreateScope();
+        var refreshTokenService = scope.ServiceProvider.GetRequiredService<IRefreshTokenService>();
+        return await refreshTokenService.ValidateRefreshToken(userId, refreshToken);
+    }
+
+    public async Task<TokenResponseModel?> RefreshTokens(RefreshTokenRequestModel request)
+    {
+        var user = await ValidateRefreshToken(request.UserId, request.RefreshToken);
+        if (user == null)
+        {
+            return null;
+        }
+
+        return await CreateTokenResponse(user);
     }
 }

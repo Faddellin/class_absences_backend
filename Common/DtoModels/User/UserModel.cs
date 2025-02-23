@@ -9,7 +9,11 @@ public class UserModel
     public Guid Id { get; set; }
     [Required]
     [MinLength(1)]
-    public string Name { get; set; } = string.Empty;
+    public string FirstName { get; set; }
+    public string? MiddleName { get; set; }
+    [Required]
+    [MinLength(1)]
+    public string LastName { get; set; }
     [Required]
     [EmailAddress]
     [MinLength(1)]

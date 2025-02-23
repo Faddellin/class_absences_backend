@@ -7,7 +7,12 @@ public class UserRegisterModel
     [Required]
     [MinLength(1)]
     [MaxLength(1000)]
-    public string Name { get; set; } = string.Empty;
+    public string FirstName { get; set; }
+    public string? MiddleName { get; set; }
+    [Required]
+    [MinLength(1)]
+    [MaxLength(1000)]
+    public string LastName { get; set; }
     [Required]
     [EmailAddress]
     [MinLength(1)]

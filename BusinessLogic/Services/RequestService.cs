@@ -190,7 +190,9 @@ public class RequestService : IRequestService
                 Id = requestEntity.Id,
                 ReasonId = requestEntity.Id,
                 Status = requestEntity.Status,
-                Username = requestEntity.User.Name,
+                FirstName = requestEntity.User.FirstName,
+                MiddleName = requestEntity.User.MiddleName,
+                LastName = requestEntity.User.LastName,
                 UserType = requestEntity.User.UserType,
                 AbsenceDateFrom = requestEntity.AbsenceDateFrom,
                 AbsenceDateTo = requestEntity.AbsenceDateTo
@@ -225,7 +227,9 @@ public class RequestService : IRequestService
             Id = requestEntity.Id,
             ReasonId = requestEntity.Id,
             Status = requestEntity.Status,
-            Username = requestEntity.User.Name,
+            FirstName = requestEntity.User.FirstName,
+            MiddleName = requestEntity.User.MiddleName,
+            LastName = requestEntity.User.LastName,
             UserType = requestEntity.User.UserType,
             userId = requestEntity.User.Id,
             lesson = requestEntity.LessonName,
@@ -279,7 +283,9 @@ public class RequestService : IRequestService
                 Id = requestEntity.Id,
                 ReasonId = requestEntity.Id,
                 Status = requestEntity.Status,
-                Username = requestEntity.User.Name,
+                FirstName = requestEntity.User.FirstName,
+                MiddleName = requestEntity.User.MiddleName,
+                LastName = requestEntity.User.LastName,
                 UserType = requestEntity.User.UserType,
                 AbsenceDateFrom = requestEntity.AbsenceDateFrom,
                 AbsenceDateTo = requestEntity.AbsenceDateTo
@@ -299,10 +305,10 @@ public class RequestService : IRequestService
         switch (sortType)
         {
             case SortType.NameAsc:
-                requestEntitySorted = requestEntityList.OrderBy(o => o.User.Name).ToList();
+                requestEntitySorted = requestEntityList.OrderBy(o => o.User.LastName).ToList();
                 break;
             case SortType.NameDesc:
-                requestEntitySorted = requestEntityList.OrderByDescending(o => o.User.Name).ToList();
+                requestEntitySorted = requestEntityList.OrderByDescending(o => o.User.LastName).ToList();
                 break;
             case SortType.CreateAsc:
                 requestEntitySorted = requestEntityList.OrderBy(o => o.CreateTime).ToList();
