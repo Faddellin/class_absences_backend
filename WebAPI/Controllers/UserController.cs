@@ -142,30 +142,22 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseModel))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = null!)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseModel))]
-    [Authorize]
+    [AllowAnonymous]
     [HttpPost("refresh-token")]
     public async Task<ActionResult<TokenResponseModel>> RefreshToken([FromBody]
         RefreshTokenRequestModel request)
     {
-        try
+        var result = await _tokenService.RefreshTokens(request);
+        if (result == null)
         {
-            await EnsureTokenIsValid();
-            var result = await _tokenService.RefreshTokens(request);
-            if (result == null)
+            return BadRequest(new ResponseModel
             {
-                return BadRequest(new ResponseModel
-                {
-                    Status = "400",
-                    Message = "Invalid refresh token"
-                });
-            }
+                Status = "400",
+                Message = "Invalid refresh token"
+            });
+        }
 
-            return Ok(result);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return Unauthorized();
-        }
+        return Ok(result);
     }
     
     /// <summary>
