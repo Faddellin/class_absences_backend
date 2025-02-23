@@ -10,6 +10,7 @@ public static class Extensions
     {
         serviceCollection.AddScoped<IUserService, UserService>();
         serviceCollection.AddScoped<IRequestService, RequestService>();
+        serviceCollection.AddScoped<IRefreshTokenService, RefreshTokenService>();
         serviceCollection.AddSingleton<ITokenService, TokenService>();
         return serviceCollection;
     }

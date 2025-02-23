@@ -302,3 +302,5 @@ C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\bin\Debug\net8.0\Busine
 C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.xml
 C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Faddellin\MyCodes\class_absences_backend\WebAPI\bin\Debug\net8.0\WebAPI.xml
+C:\Users\а\RiderProjects\class_absences_backend\WebAPI\bin\Debug\net8.0\WebAPI.xml
+C:\Users\а\RiderProjects\class_absences_backend\WebAPI\obj\Debug\net8.0\WebAPI.xml

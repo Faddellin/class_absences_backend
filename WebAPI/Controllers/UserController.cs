@@ -73,8 +73,8 @@ public class UserController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var token = await _userService.Register(model);
-        return Ok(token);
+        var tokenResponse = await _userService.Register(model);
+        return Ok(tokenResponse);
     }
     
     /// <summary>
@@ -90,8 +90,8 @@ public class UserController : ControllerBase
     [HttpPost("login")]
     public async Task<ActionResult<TokenResponseModel>> Login([FromBody] LoginCredentialsModel model)
     {
-        var token = await _userService.Login(model);
-        if (token.Token.Equals(""))
+        var tokenResponse = await _userService.Login(model);
+        if (tokenResponse.AccessToken.Equals(""))
         {
             return BadRequest(new ResponseModel
             {
@@ -99,7 +99,7 @@ public class UserController : ControllerBase
                 Message = "Login failed"
             });
         }
-        return Ok(token);
+        return Ok(tokenResponse);
     }
     
     /// <summary>
@@ -125,6 +125,42 @@ public class UserController : ControllerBase
                 Status = null,
                 Message = "Logged out"
             });
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Unauthorized();
+        }
+    }
+    
+    /// <summary>
+    /// Refresh user tokens
+    /// </summary>
+    /// <response code="200">Success</response>
+    /// <response code="401">Unauthorized</response>
+    /// <response code="500">InternalServerError</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TokenResponseModel))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ResponseModel))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = null!)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseModel))]
+    [Authorize]
+    [HttpPost("refresh-token")]
+    public async Task<ActionResult<TokenResponseModel>> RefreshToken([FromBody]
+        RefreshTokenRequestModel request)
+    {
+        try
+        {
+            await EnsureTokenIsValid();
+            var result = await _tokenService.RefreshTokens(request);
+            if (result == null)
+            {
+                return BadRequest(new ResponseModel
+                {
+                    Status = "400",
+                    Message = "Invalid refresh token"
+                });
+            }
+
+            return Ok(result);
         }
         catch (UnauthorizedAccessException)
         {

@@ -2,8 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Common.DtoModels.Others;
 
-public class TokenResponseModel
+public class RefreshTokenRequestModel
 {
-    public string AccessToken { get; set; }
+    [Required]
+    public Guid UserId { get; set; }
+    [Required]
     public string RefreshToken { get; set; }
 }

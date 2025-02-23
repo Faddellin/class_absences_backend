@@ -164,7 +164,8 @@ public class RequestService : IRequestService
         List<RequestEntity> requestEntityList = await _appDbContext.Requests
             .Include(o => o.User)
             .Where(o => o.Status == requestStatus &&
-            o.User.Name.Contains(userName) &&
+            (o.User.FirstName.Contains(userName) || o.User.MiddleName!.Contains(userName) ||
+             o.User.LastName.Contains(userName)) &&
             o.CreateTime >= dateFrom &&
             o.CreateTime <= dateTo).ToListAsync();
 
@@ -181,7 +182,9 @@ public class RequestService : IRequestService
                 Id = requestEntity.Id,
                 ReasonId = requestEntity.Id,
                 Status = requestEntity.Status,
-                Username = requestEntity.User.Name,
+                FirstName = requestEntity.User.FirstName,
+                MiddleName = requestEntity.User.MiddleName,
+                LastName = requestEntity.User.LastName,
                 UserType = requestEntity.User.UserType,
                 AbsenceDateFrom = requestEntity.AbsenceDateFrom,
                 AbsenceDateTo = requestEntity.AbsenceDateTo
@@ -216,7 +219,9 @@ public class RequestService : IRequestService
             Id = requestEntity.Id,
             ReasonId = requestEntity.Id,
             Status = requestEntity.Status,
-            Username = requestEntity.User.Name,
+            FirstName = requestEntity.User.FirstName,
+            MiddleName = requestEntity.User.MiddleName,
+            LastName = requestEntity.User.LastName,
             UserType = requestEntity.User.UserType,
             AbsenceDateFrom = requestEntity.AbsenceDateFrom,
             AbsenceDateTo = requestEntity.AbsenceDateTo
@@ -268,7 +273,9 @@ public class RequestService : IRequestService
                 Id = requestEntity.Id,
                 ReasonId = requestEntity.Id,
                 Status = requestEntity.Status,
-                Username = requestEntity.User.Name,
+                FirstName = requestEntity.User.FirstName,
+                MiddleName = requestEntity.User.MiddleName,
+                LastName = requestEntity.User.LastName,
                 UserType = requestEntity.User.UserType,
                 AbsenceDateFrom = requestEntity.AbsenceDateFrom,
                 AbsenceDateTo = requestEntity.AbsenceDateTo
@@ -288,10 +295,10 @@ public class RequestService : IRequestService
         switch (sortType)
         {
             case SortType.NameAsc:
-                requestEntitySorted = requestEntityList.OrderBy(o => o.User.Name).ToList();
+                requestEntitySorted = requestEntityList.OrderBy(o => o.User.LastName).ToList();
                 break;
             case SortType.NameDesc:
-                requestEntitySorted = requestEntityList.OrderByDescending(o => o.User.Name).ToList();
+                requestEntitySorted = requestEntityList.OrderByDescending(o => o.User.LastName).ToList();
                 break;
             case SortType.CreateAsc:
                 requestEntitySorted = requestEntityList.OrderBy(o => o.CreateTime).ToList();

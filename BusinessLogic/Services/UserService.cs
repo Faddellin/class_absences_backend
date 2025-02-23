@@ -32,7 +32,9 @@ public class UserService : IUserService
         var userEntity = new UserEntity()
         {
             Id = Guid.NewGuid(),
-            Name = userRegisterModel.Name,
+            FirstName = userRegisterModel.FirstName,
+            MiddleName = userRegisterModel.MiddleName,
+            LastName = userRegisterModel.LastName,
             Email = userRegisterModel.Email,
             PasswordHash = passwordService.HashPassword(userRegisterModel.Password),
             UserType = UserType.Unverified
@@ -41,13 +43,15 @@ public class UserService : IUserService
         await _appDbContext.Users.AddAsync(userEntity);
         await _appDbContext.SaveChangesAsync();
 
-        var strToken = await _tokenService.CreateToken(userEntity.Id);
-        var token = new TokenResponseModel
+        var strAccessToken = await _tokenService.CreateToken(userEntity);
+        var strRefreshToken = await _tokenService.GenerateAndSaveRefreshToken(userEntity);
+        var tokenResponse = new TokenResponseModel
         {
-            Token = strToken
+            AccessToken = strAccessToken,
+            RefreshToken = strRefreshToken
         };
         
-        return token;
+        return tokenResponse;
     }
 
     public async Task<TokenResponseModel> Login(LoginCredentialsModel loginCredentialsModel)
@@ -61,17 +65,20 @@ public class UserService : IUserService
 
             if (verificationResult)
             {
-                var strToken = await _tokenService.CreateToken(user.Id);
-                var token = new TokenResponseModel
+                var strAccessToken = await _tokenService.CreateToken(user);
+                var strRefreshToken = await _tokenService.GenerateAndSaveRefreshToken(user);
+                var tokenResponse = new TokenResponseModel
                 {
-                    Token = strToken
+                    AccessToken = strAccessToken,
+                    RefreshToken = strRefreshToken
                 };
-                return token;  
+        
+                return tokenResponse;
             }
 
         }
 
-        return (new TokenResponseModel { Token = "" });
+        return (new TokenResponseModel { AccessToken = "" });
     }
 
     public async Task<UserModel> GetProfile(Guid userId)
@@ -88,7 +95,9 @@ public class UserService : IUserService
         {
             Id = user.Id,
             Email = user.Email,
-            Name = user.Name,
+            FirstName = user.FirstName,
+            MiddleName = user.MiddleName,
+            LastName = user.LastName,
             UserType = user.UserType
         };
 
