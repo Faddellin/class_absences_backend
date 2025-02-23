@@ -30,20 +30,19 @@ public class RequestService : IRequestService
             .Include(o => o.User)
             .FirstOrDefaultAsync(o => o.Id == requestCreateModel.reasonId); ;
 
-        if (requestCreateModel.reasonId != null && reasonEntity == null)
+        bool reasonIsNotFounded = (requestCreateModel.reasonId != null && reasonEntity == null);
+
+        if (reasonIsNotFounded)
         {
             throw new KeyNotFoundException("Reason is not found");
         }
 
         throwIfObjIsNull(userEntity);
 
-        if (reasonEntity != null)
+        if (noRightsUsers.Contains(userEntity.UserType) ||
+                (reasonEntity != null && userEntity != reasonEntity.User && !allRightsUsers.Contains(userEntity.UserType)))
         {
-            if (noRightsUsers.Contains(userEntity.UserType) ||
-                    (userEntity != reasonEntity.User && !allRightsUsers.Contains(userEntity.UserType)))
-            {
-                throw new AccessViolationException("User doesen't have enough rights");
-            }
+            throw new AccessViolationException("User doesn't have enough rights");
         }
 
         if (requestCreateModel.AbsenceDateFrom >= requestCreateModel.AbsenceDateTo)
@@ -80,14 +79,20 @@ public class RequestService : IRequestService
             .Include(o => o.User)
             .FirstOrDefaultAsync(o => o.Id == requestId);
 
+        bool reasonIsNotFounded = (requestCreateModel.reasonId != null && reasonEntity == null);
+
+        if (reasonIsNotFounded)
+        {
+            throw new KeyNotFoundException("Reason is not found");
+        }
 
         throwIfObjIsNull(userEntity);
         throwIfObjIsNull(requestEntity);
 
         if (noRightsUsers.Contains(userEntity.UserType) ||
-            (userEntity != requestEntity.User && !allRightsUsers.Contains(userEntity.UserType)))
+                (reasonEntity != null && userEntity != reasonEntity.User && !allRightsUsers.Contains(userEntity.UserType)))
         {
-            throw new AccessViolationException("User doesen't have enough rights");
+            throw new AccessViolationException("User doesn't have enough rights");
         }
 
         if (requestCreateModel.AbsenceDateFrom >= requestCreateModel.AbsenceDateTo)
@@ -159,23 +164,27 @@ public class RequestService : IRequestService
         {
             userName = "";
         }
+        else
+        {
+            userName = userName.ToLower();
+        }
 
 
         List<RequestEntity> requestEntityList = await _appDbContext.Requests
             .Include(o => o.User)
-            .Where(o => o.Status == requestStatus &&
-            o.User.Name.Contains(userName) &&
-            o.CreateTime >= dateFrom &&
-            o.CreateTime <= dateTo).ToListAsync();
+            .Where(o => (requestStatus == null || o.Status == requestStatus) &&
+            o.User.Name.ToLower().Contains(userName) &&
+            (dateFrom == null || o.CreateTime >= dateFrom) &&
+            (dateTo == null || o.CreateTime <= dateTo)).ToListAsync();
 
 
         List<RequestEntity> requestEntitySorted = sortRequestEntityList(sortType, requestEntityList);
 
-        List<RequestModel> requestModelList = new List<RequestModel>();
+        List<RequestShortModel> requestModelList = new List<RequestShortModel>();
 
         foreach (RequestEntity requestEntity in requestEntitySorted)
         {
-            requestModelList.Add(new RequestModel()
+            requestModelList.Add(new RequestShortModel()
             {
                 CreateTime = requestEntity.CreateTime,
                 Id = requestEntity.Id,
@@ -218,6 +227,8 @@ public class RequestService : IRequestService
             Status = requestEntity.Status,
             Username = requestEntity.User.Name,
             UserType = requestEntity.User.UserType,
+            userId = requestEntity.User.Id,
+            lesson = requestEntity.LessonName,
             AbsenceDateFrom = requestEntity.AbsenceDateFrom,
             AbsenceDateTo = requestEntity.AbsenceDateTo
         };
@@ -250,19 +261,19 @@ public class RequestService : IRequestService
 
         List<RequestEntity> requestEntityList = await _appDbContext.Requests
             .Include(o => o.User)
-            .Where(o => o.Status == requestStatus &&
+            .Where(o => (requestStatus == null || o.Status == requestStatus) &&
             o.User == userEntity &&
-            o.CreateTime >= dateFrom &&
-            o.CreateTime <= dateTo).ToListAsync();
+            (dateFrom == null || o.CreateTime >= dateFrom) &&
+            (dateTo == null || o.CreateTime <= dateTo)).ToListAsync();
 
 
         List<RequestEntity> requestEntitySorted = sortRequestEntityList(sortType, requestEntityList);
 
-        List<RequestModel> requestModelList = new List<RequestModel>();
+        List<RequestShortModel> requestModelList = new List<RequestShortModel>();
 
         foreach (RequestEntity requestEntity in requestEntitySorted)
         {
-            requestModelList.Add(new RequestModel()
+            requestModelList.Add(new RequestShortModel()
             {
                 CreateTime = requestEntity.CreateTime,
                 Id = requestEntity.Id,
