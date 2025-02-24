@@ -77,7 +77,7 @@ public class ReasonController : ControllerBase
     }
     
     /// <summary>
-    /// Create reason
+    /// Create a reason
     /// </summary>
     /// <response code="200">Success</response>
     /// <response code="401">Unauthorized</response>
@@ -113,6 +113,43 @@ public class ReasonController : ControllerBase
             }
 
             return Ok(reasonId);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Unauthorized();
+        }
+        catch (Exception)
+        {
+            return Problem();
+        }
+    }
+    
+    /// <summary>
+    /// Get the reason
+    /// </summary>
+    /// <response code="200">Success</response>
+    /// <response code="401">Unauthorized</response>
+    /// <response code="404">Not found</response>
+    /// <response code="500">InternalServerError</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReasonModel))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = null!)]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = null!)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseModel))]
+    [Authorize(Roles = "Student, Teacher")]
+    [HttpGet("reason/{reasonId:guid}")]
+    public async Task<ActionResult<ReasonModel>> GetTheReason([FromRoute] Guid reasonId)
+    {
+        try
+        {
+            var userId = await EnsureTokenIsValid();
+            var reason = await _reasonService.GetReason(userId, reasonId);
+
+            if (reason == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(reason);
         }
         catch (UnauthorizedAccessException)
         {

@@ -32,9 +32,9 @@ public class ReasonService : IReasonService
             .ToListAsync();
         var reasonList = reasons.Select(reason => new ReasonModel
             {
+                CreateTime = reason.CreateTime,
                 DateFrom = reason.DateFrom,
                 DateTo = reason.DateTo,
-                Description = reason.Description,
                 Id = reason.Id,
                 Images = reason.Images!,
                 ReasonType = reason.ReasonType
@@ -78,9 +78,9 @@ public class ReasonService : IReasonService
 
         var reason = new ReasonEntity
         {
+            CreateTime = DateTime.UtcNow,
             DateFrom = createModel.DateFrom,
             DateTo = createModel.DateTo,
-            Description = createModel.Description,
             Id = Guid.NewGuid(),
             Images = urlsList!,
             ReasonType = ReasonType.Unchecked,
@@ -91,5 +91,35 @@ public class ReasonService : IReasonService
         await _appDbContext.SaveChangesAsync();
 
         return reason.Id;
+    }
+
+    public async Task<ReasonModel?> GetReason(Guid userId, Guid reasonId)
+    {
+        var user = await _appDbContext.Users
+            .FindAsync(userId);
+        if (user == null)
+        {
+            return null;
+        }
+
+        var reason = await _appDbContext.Reasons
+            .Include(r => r.User)
+            .FirstOrDefaultAsync(r => r.User.Id == userId && r.Id == reasonId);
+        if (reason == null)
+        {
+            return null;
+        }
+
+        var reasonModel = new ReasonModel
+        {
+            CreateTime = reason.CreateTime,
+            DateFrom = reason.DateFrom,
+            DateTo = reason.DateTo,
+            Id = reason.Id,
+            Images = reason.Images!,
+            ReasonType = reason.ReasonType
+        };
+
+        return reasonModel;
     }
 }

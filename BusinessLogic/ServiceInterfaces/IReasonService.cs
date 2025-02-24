@@ -9,4 +9,6 @@ public interface IReasonService
     public Task<Guid?> CreateReason(
         Guid userId, IFormFileCollection files, 
         ReasonCreateModel createModel);
+
+    public Task<ReasonModel?> GetReason(Guid userId, Guid reasonId);
 }

@@ -10,6 +10,7 @@ public class RequestEntity
     public RequestStatus Status { get; set; }
     public UserEntity User { get; set; }
     public string LessonName { get; set; }
+    public string Description { get; set; }
     public DateTime AbsenceDateFrom { get; set; }
     public DateTime AbsenceDateTo { get; set; }
 }
