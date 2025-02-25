@@ -10,11 +10,8 @@ namespace Common.DtoModels.Request
 
         [Required]
         public DateTime AbsenceDateTo { get; set; }
-
         [Required]
         [MinLength(1)]
-        public string LessonName { get; set; }
-
-        public Guid? reasonId { get; set; }
+        public string Description { get; set; }
     }
 }

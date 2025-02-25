@@ -50,13 +50,20 @@ namespace BusinessLogic.Controllers
         [ProducesResponseType(typeof(Guid), 200)]
         [ProducesResponseType(typeof(ResponseModel), 500)]
         [HttpPost]
-        public async Task<ActionResult<Guid>> CreateRequest(
-                [FromBody] RequestCreateModel requestCreateModel)
+        public async Task<ActionResult<Guid>> CreateRequest()
         {
 
             var userId = await EnsureTokenIsValid();
+            var files = Request.Form.Files;
+            
+            var requestCreateModel = new RequestCreateModel()
+            {
+                AbsenceDateFrom = DateTime.Parse(Request.Form["absenceDateFrom"].ToString()).ToUniversalTime(),
+                AbsenceDateTo = DateTime.Parse(Request.Form["absenceDateTo"].ToString()).ToUniversalTime(),
+                Description = Request.Form["description"].ToString()
+            };
 
-            Guid requestId = await _requestService.CreateRequest(requestCreateModel, userId);
+            Guid requestId = await _requestService.CreateRequest(requestCreateModel, userId, files);
 
             return Ok(requestId);
         }
@@ -74,38 +81,38 @@ namespace BusinessLogic.Controllers
         [Authorize]
         [HttpPut("{requestId}")]
         public async Task<IActionResult> EditRequest(
-                [FromBody] RequestCreateModel requestCreateModel,
+                [FromBody] RequestEditModel requestEditModel,
                 [FromRoute] Guid requestId)
         {
 
             var userId = await EnsureTokenIsValid();
 
-            await _requestService.EditRequest(requestCreateModel, requestId, userId);
+            await _requestService.EditRequest(requestEditModel, requestId, userId);
 
             return Ok();
         }
 
-        /// <summary>
-        /// Change request reason
-        /// </summary>
-        /// <response code="200">Request reason was changed</response>
-        /// <response code="403">User doesn't have enough rights</response>
-        /// <response code="400">Invalid arguments</response>
-        /// <response code="500">Internal server error</response>
-        [ProducesResponseType(typeof(ResponseModel), 500)]
-        [Authorize]
-        [HttpPut("reason/{requestId}")]
-        public async Task<IActionResult> ChangeRequestReason(
-                [FromRoute] Guid requestId,
-                [FromQuery] Guid reasonId)
-        {
-
-            var userId = await EnsureTokenIsValid();
-
-            await _requestService.ChangeRequestReason(reasonId, requestId, userId);
-
-            return Ok();
-        }
+        // /// <summary>
+        // /// Change request reason
+        // /// </summary>
+        // /// <response code="200">Request reason was changed</response>
+        // /// <response code="403">User doesn't have enough rights</response>
+        // /// <response code="400">Invalid arguments</response>
+        // /// <response code="500">Internal server error</response>
+        // [ProducesResponseType(typeof(ResponseModel), 500)]
+        // [Authorize]
+        // [HttpPut("reason/{requestId}")]
+        // public async Task<IActionResult> ChangeRequestReason(
+        //         [FromRoute] Guid requestId,
+        //         [FromQuery] Guid reasonId)
+        // {
+        //
+        //     var userId = await EnsureTokenIsValid();
+        //
+        //     await _requestService.ChangeRequestReason(reasonId, requestId, userId);
+        //
+        //     return Ok();
+        // }
 
         /// <summary>
         /// Get all requests by filters

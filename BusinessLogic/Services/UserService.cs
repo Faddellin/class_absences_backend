@@ -37,7 +37,7 @@ public class UserService : IUserService
             LastName = userRegisterModel.LastName,
             Email = userRegisterModel.Email,
             PasswordHash = passwordService.HashPassword(userRegisterModel.Password),
-            UserType = UserType.Unverified
+            UserType = UserType.Student
         };
 
         await _appDbContext.Users.AddAsync(userEntity);
