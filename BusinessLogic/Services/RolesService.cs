@@ -124,9 +124,9 @@ public class RolesService : IRolesService
 
             foreach (var dateSegment in segmentsOfDates)
             {
-                string reasonOfAbsence = dateSegment.reason == RequestStatus.Confirmed ? "”‚‡ÊËÚÂÎ¸Ì‡ˇ" : "ÕÂÛ‚‡ÊËÚÂÎ¸Ì‡ˇ";
-                documentsStrings.Add($"œÂËÓ‰: {dateSegment.startDate} ----> {dateSegment.endDate} \n" +
-                        $"œË˜ËÌ‡ ÔÓÔÛÒÍ‡: {reasonOfAbsence}");
+                string reasonOfAbsence = dateSegment.reason == RequestStatus.Confirmed ? "–£–≤–∞–∂–∏—Ç–µ–ª—å–Ω–∞—è" : "–ù–µ—É–≤–∞–∂–∏—Ç–µ–ª—å–Ω–∞—è";
+                documentsStrings.Add($"–ü–µ—Ä–∏–æ–¥: {dateSegment.startDate} ----> {dateSegment.endDate} \n" +
+                                     $"–ü—Ä–∏—á–∏–Ω–∞ –ø—Ä–æ–ø—É—Å–∫–∞: {reasonOfAbsence}");
             }
 
             foreach (string docString in documentsStrings)

@@ -7,6 +7,7 @@ using System.Text.Json;
 using BusinessLogic.ServiceInterfaces;
 using Common;
 using Common.DbModels;
+using Common.DtoModels;
 using Common.DtoModels.Others;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -93,6 +94,24 @@ public class TokenService : ITokenService
 
         await Task.CompletedTask;
         return userId;
+    }
+
+    public Task<UserType> GetUserRoleFromToken(string strToken)
+    {
+        var payload = DecodeTokenPayload(strToken);
+        if (payload == null)
+        {
+            throw new KeyNotFoundException("Incorrect token");
+        }
+
+        var role = payload.role;
+        if (role == null)
+        {
+            throw new KeyNotFoundException("Incorrect token");
+        }
+
+        var result = Enum.TryParse(role, out UserType userRole);
+        return Task.FromResult(result ? userRole : UserType.Student);
     }
 
     public async Task<Guid> GetTokenIdFromToken(string strToken)
