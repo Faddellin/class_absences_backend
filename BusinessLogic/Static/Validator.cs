@@ -37,9 +37,9 @@ public static class Validator
 
     public static void ThrowIfFirstDateHigherThanSecond(DateTime? dateFrom, DateTime? dateTo)
     {
-        if (dateFrom > dateTo)
+        if (dateFrom >= dateTo)
         {
-            throw new ArgumentException("DateFrom can't be higher than DateTo");
+            throw new ArgumentException("DateFrom can't be higher than DateTo or equal it");
         }
     }
 
@@ -50,7 +50,9 @@ public static class Validator
             if (request.AbsenceDateFrom > otherRequest.AbsenceDateFrom &&
                 request.AbsenceDateFrom < otherRequest.AbsenceDateTo ||
                 request.AbsenceDateTo > otherRequest.AbsenceDateFrom &&
-                request.AbsenceDateTo < otherRequest.AbsenceDateTo)
+                request.AbsenceDateTo < otherRequest.AbsenceDateTo ||
+                request.AbsenceDateTo == otherRequest.AbsenceDateTo && 
+                request.AbsenceDateFrom == otherRequest.AbsenceDateFrom)
             {
                 throw new ArgumentException("Request date range intersects with other request from this user");
             }
@@ -64,7 +66,9 @@ public static class Validator
             if (request.AbsenceDateFrom > otherRequest.AbsenceDateFrom &&
                 request.AbsenceDateFrom < otherRequest.AbsenceDateTo ||
                 request.AbsenceDateTo > otherRequest.AbsenceDateFrom &&
-                request.AbsenceDateTo < otherRequest.AbsenceDateTo)
+                request.AbsenceDateTo < otherRequest.AbsenceDateTo ||
+                request.AbsenceDateTo == otherRequest.AbsenceDateTo && 
+                request.AbsenceDateFrom == otherRequest.AbsenceDateFrom)
             {
                 throw new ArgumentException("Request date range intersects with other request from this user");
             }
@@ -78,7 +82,9 @@ public static class Validator
             if (request.AbsenceDateFrom > otherRequest.AbsenceDateFrom &&
                 request.AbsenceDateFrom < otherRequest.AbsenceDateTo ||
                 request.AbsenceDateTo > otherRequest.AbsenceDateFrom &&
-                request.AbsenceDateTo < otherRequest.AbsenceDateTo)
+                request.AbsenceDateTo < otherRequest.AbsenceDateTo ||
+                request.AbsenceDateTo == otherRequest.AbsenceDateTo && 
+                request.AbsenceDateFrom == otherRequest.AbsenceDateFrom)
             {
                 throw new ArgumentException("Request date range intersects with other request from this user");
             }

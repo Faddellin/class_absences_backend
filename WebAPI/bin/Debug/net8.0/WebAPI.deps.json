@@ -19,7 +19,6 @@
           "Newtonsoft.Json": "13.0.3",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.3",
           "Swashbuckle.AspNetCore": "6.4.0",
-          "System.Drawing.Common": "9.0.2",
           "jose-jwt": "5.1.1"
         },
         "runtime": {
@@ -648,22 +647,6 @@
           }
         }
       },
-      "Microsoft.Win32.SystemEvents/9.0.2": {
-        "runtime": {
-          "lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.225.6610"
-          }
-        },
-        "runtimeTargets": {
-          "runtimes/win/lib/net8.0/Microsoft.Win32.SystemEvents.dll": {
-            "rid": "win",
-            "assetType": "runtime",
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.225.6610"
-          }
-        }
-      },
       "Mono.TextTemplating/3.0.0": {
         "dependencies": {
           "System.CodeDom": "6.0.0"
@@ -704,6 +687,14 @@
           "lib/net8.0/Npgsql.EntityFrameworkCore.PostgreSQL.dll": {
             "assemblyVersion": "9.0.3.0",
             "fileVersion": "9.0.3.0"
+          }
+        }
+      },
+      "SixLabors.ImageSharp/3.1.6": {
+        "runtime": {
+          "lib/net6.0/SixLabors.ImageSharp.dll": {
+            "assemblyVersion": "3.0.0.0",
+            "fileVersion": "3.1.6.0"
           }
         }
       },
@@ -822,21 +813,6 @@
           }
         }
       },
-      "System.Drawing.Common/9.0.2": {
-        "dependencies": {
-          "Microsoft.Win32.SystemEvents": "9.0.2"
-        },
-        "runtime": {
-          "lib/net8.0/System.Drawing.Common.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.225.6608"
-          },
-          "lib/net8.0/System.Private.Windows.Core.dll": {
-            "assemblyVersion": "9.0.0.0",
-            "fileVersion": "9.0.225.6608"
-          }
-        }
-      },
       "System.Formats.Asn1/5.0.0": {},
       "System.IdentityModel.Tokens.Jwt/7.0.3": {
         "dependencies": {
@@ -914,7 +890,7 @@
           "Microsoft.EntityFrameworkCore": "9.0.2",
           "Microsoft.IdentityModel.JsonWebTokens": "8.5.0",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.3",
-          "System.Drawing.Common": "9.0.2",
+          "SixLabors.ImageSharp": "3.1.6",
           "jose-jwt": "5.1.1"
         },
         "runtime": {
@@ -1227,13 +1203,6 @@
       "path": "microsoft.openapi/1.4.3",
       "hashPath": "microsoft.openapi.1.4.3.nupkg.sha512"
     },
-    "Microsoft.Win32.SystemEvents/9.0.2": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-5BkGZ6mHp2dHydR29sb0fDfAuqkv30AHtTih8wMzvPZysOmBFvHfnkR2w3tsc0pSiIg8ZoKyefJXWy9r3pBh0w==",
-      "path": "microsoft.win32.systemevents/9.0.2",
-      "hashPath": "microsoft.win32.systemevents.9.0.2.nupkg.sha512"
-    },
     "Mono.TextTemplating/3.0.0": {
       "type": "package",
       "serviceable": true,
@@ -1261,6 +1230,13 @@
       "sha512": "sha512-1A6HpMPbzK+quxdtug1aDHI4BSRTgpi7OaDt8WQh7SFJd2sSQ0nNTZ7sYrwyxVf4AdKdN7XJL9tpiiJjRUaa4g==",
       "path": "npgsql.entityframeworkcore.postgresql/9.0.3",
       "hashPath": "npgsql.entityframeworkcore.postgresql.9.0.3.nupkg.sha512"
+    },
+    "SixLabors.ImageSharp/3.1.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dHQ5jugF9v+5/LCVHCWVzaaIL6WOehqJy6eju/0VFYFPEj2WtqkGPoEV9EVQP83dHsdoqYaTuWpZdwAd37UwfA==",
+      "path": "sixlabors.imagesharp/3.1.6",
+      "hashPath": "sixlabors.imagesharp.3.1.6.nupkg.sha512"
     },
     "Swashbuckle.AspNetCore/6.4.0": {
       "type": "package",
@@ -1352,13 +1328,6 @@
       "sha512": "sha512-z5CMQNLzk8UKnTEHRKb4nq03CCDWBMEF2gfP3oPKZn4F8wip6LFZCP5rF90DREHqdNddScIGAfszXJSjh4drSw==",
       "path": "system.diagnostics.diagnosticsource/9.0.2",
       "hashPath": "system.diagnostics.diagnosticsource.9.0.2.nupkg.sha512"
-    },
-    "System.Drawing.Common/9.0.2": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-JU947wzf8JbBS16Y5EIZzAlyQU+k68D7LRx6y03s2wlhlvLqkt/8uPBrjv2hJnnaJKbdb0GhQ3JZsfYXhrRjyg==",
-      "path": "system.drawing.common/9.0.2",
-      "hashPath": "system.drawing.common.9.0.2.nupkg.sha512"
     },
     "System.Formats.Asn1/5.0.0": {
       "type": "package",

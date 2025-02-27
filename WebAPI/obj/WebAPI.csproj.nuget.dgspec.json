@@ -82,9 +82,9 @@
               "target": "Package",
               "version": "[9.0.3, )"
             },
-            "System.Drawing.Common": {
+            "SixLabors.ImageSharp": {
               "target": "Package",
-              "version": "[9.0.2, )"
+              "version": "[3.1.6, )"
             },
             "jose-jwt": {
               "target": "Package",
@@ -294,10 +294,6 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"
-            },
-            "System.Drawing.Common": {
-              "target": "Package",
-              "version": "[9.0.2, )"
             },
             "jose-jwt": {
               "target": "Package",

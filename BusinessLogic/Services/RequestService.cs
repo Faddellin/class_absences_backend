@@ -3,11 +3,10 @@ using Common.DbModels;
 using Common.DtoModels;
 using Common.DtoModels.Request;
 using Microsoft.EntityFrameworkCore;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Http;
 using BusinessLogic.Static;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
 
 namespace BusinessLogic.Services;
 
@@ -34,7 +33,7 @@ public class RequestService : IRequestService
 
         Validator.ThrowIfRequestIntersectAnyOtherRequest(requestCreateModel, userRequests);
         
-        var urlsList = new List<string>();
+        var fileNames = new List<string>();
        
         var files = formFiles;
 
@@ -52,8 +51,8 @@ public class RequestService : IRequestService
                     await file.CopyToAsync(stream);
                     stream.Position = 0;
 
-                    using var image = new Bitmap(stream);
-                    image.Save(filePath, ImageFormat.Jpeg);
+                    using var image = await Image.LoadAsync(stream);
+                    await image.SaveAsync(filePath, new JpegEncoder());
                 }
             }           
         }
@@ -157,8 +156,8 @@ public class RequestService : IRequestService
                     await file.CopyToAsync(stream);
                     stream.Position = 0;
 
-                    using var image = new Bitmap(stream);
-                    image.Save(filePath, ImageFormat.Jpeg);
+                    using var image = await Image.LoadAsync(stream);
+                    await image.SaveAsync(filePath, new JpegEncoder());
                 }
             }           
         }
