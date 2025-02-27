@@ -10,7 +10,7 @@ namespace class_absences_backend.Controllers;
 
 [ApiController]
 [Route("api/user")]
-public class UserController : BaseController
+public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
     private readonly ITokenService _tokenService;
@@ -149,7 +149,7 @@ public class UserController : BaseController
     [HttpGet("profile")]
     public async Task<ActionResult<UserModel>> GetProfile()
     {
-        var userId = GetUserId();
+        var userId = (Guid)HttpContext.Items["userId"];
         
         var doctorModel = await _userService.GetProfile(userId);
 
@@ -173,7 +173,7 @@ public class UserController : BaseController
     [HttpPut("profile")]
     public async Task<IActionResult> ChangeProfile([FromBody] UserEditModel model)
     {
-        var userId = GetUserId();
+        var userId = (Guid)HttpContext.Items["userId"];
         
         var isValid = ModelState.IsValid;
         

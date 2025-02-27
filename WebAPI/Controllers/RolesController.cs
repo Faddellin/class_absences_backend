@@ -17,7 +17,7 @@ namespace BusinessLogic.Controllers
     [ApiController]
     [Route("api/role")]
 
-    public class RolesController : BaseController
+    public class RolesController : ControllerBase
     {
 
         private readonly IRolesService _rolesService;
@@ -44,7 +44,7 @@ namespace BusinessLogic.Controllers
                 [FromQuery] UserType userType)
         {
 
-            var userId = GetUserId();
+            var userId = (Guid)HttpContext.Items["userId"];
 
             //await _rolesService.ExportUserAbsencesInWord(from, to, new Guid("a31631e3-1ee5-4b8e-a997-458cd3aa6208"), new List<Guid> { targetUserId });
             await _rolesService.ChangeRole(userId, targetUserId, userType);

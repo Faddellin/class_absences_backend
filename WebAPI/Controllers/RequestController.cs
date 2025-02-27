@@ -16,7 +16,7 @@ namespace BusinessLogic.Controllers
     [ApiController]
     [Route("api/request")]
 
-    public class RequestController : BaseController
+    public class RequestController : ControllerBase
     {
 
         private readonly IRequestService _requestService;
@@ -43,7 +43,7 @@ namespace BusinessLogic.Controllers
             [FromForm] IFormFileCollection files)
         {
 
-            var userId = GetUserId();
+            var userId = (Guid)HttpContext.Items["userId"];
 
             Guid requestId = await _requestService.CreateRequest(requestCreateModel, userId, files);
 
@@ -67,7 +67,7 @@ namespace BusinessLogic.Controllers
                 [FromRoute] Guid requestId)
         {
 
-            var userId = GetUserId();
+            var userId = (Guid)HttpContext.Items["userId"];
 
             await _requestService.EditRequest(requestEditModel, requestId, userId);
 
@@ -88,7 +88,7 @@ namespace BusinessLogic.Controllers
             [FromForm] IFormFileCollection files)
         {
 
-            var userId = GetUserId();
+            var userId = (Guid)HttpContext.Items["userId"];
 
             var requestModel = await _requestService.AddImagesToRequest(userId, requestId, files);
 
@@ -114,7 +114,7 @@ namespace BusinessLogic.Controllers
                 [FromQuery] DateTime? dateTo)
         {
 
-            var userId = GetUserId();
+            var userId = (Guid)HttpContext.Items["userId"];
 
             RequestListModel requestListModel = await _requestService.GetAllRequests(sortType, requestStatus, userName, dateFrom, dateTo, userId);
 
@@ -140,7 +140,7 @@ namespace BusinessLogic.Controllers
                 [FromRoute] Guid targetUserId)
         {
 
-            var userId = GetUserId();
+            var userId = (Guid)HttpContext.Items["userId"];
 
             RequestListModel requestListModel = await _requestService.GetUserRequests(sortType, requestStatus, dateFrom, dateTo, userId, targetUserId);
 
@@ -162,7 +162,7 @@ namespace BusinessLogic.Controllers
                 [FromRoute] Guid requestId)
         {
 
-            var userId = GetUserId();
+            var userId = (Guid)HttpContext.Items["userId"];
 
             RequestModel requestModel = await _requestService.GetRequest(requestId, userId);
 

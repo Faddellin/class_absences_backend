@@ -11,7 +11,7 @@ namespace BusinessLogic.Controllers
     [ApiController]
     [Route("api/report")]
 
-    public class ReportsController : BaseController
+    public class ReportsController : ControllerBase
     {
 
         private readonly IReportService _reportService;
@@ -37,7 +37,7 @@ namespace BusinessLogic.Controllers
                 [FromQuery] DateTime dateTo)
         {
 
-            var userId = GetUserId();
+            var userId = (Guid)HttpContext.Items["userId"];
 
             await _reportService.ExportUserAbsencesInWord(dateFrom, dateTo, userId, targetUsersId);
 
