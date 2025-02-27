@@ -63,13 +63,6 @@ public class UserController : ControllerBase
             isValid = false;
         }
         
-        if (!await _userService.IsEmailUnique(model.Email))
-        {
-            ModelState.AddModelError("Email",
-                "This email is already taken");
-            isValid = false;
-        }
-        
         if (!isValid)
         {
             return BadRequest(ModelState);

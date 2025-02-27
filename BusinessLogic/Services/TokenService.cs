@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using BusinessLogic.ServiceInterfaces;
+using BusinessLogic.Static;
 using Common;
 using Common.DbModels;
 using Common.DtoModels.Others;
@@ -98,15 +99,13 @@ public class TokenService : ITokenService
     public async Task<Guid> GetTokenIdFromToken(string strToken)
     {
         var payload = DecodeTokenPayload(strToken);
-        if (payload == null)
-        {
-            throw new KeyNotFoundException("Incorrect token");
-        }
+
+        Validator.ThrowIfNull(payload, "Incorrect token");
+
         var tokenIdString = payload.token_id;
-        if (tokenIdString == null)
-        {
-            throw new KeyNotFoundException("Incorrect token");
-        }
+
+        Validator.ThrowIfNull(tokenIdString, "Incorrect token");
+        
         if (!Guid.TryParse(tokenIdString, out var tokenId))
         {
             throw new KeyNotFoundException("Incorrect token");

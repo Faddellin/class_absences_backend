@@ -21,6 +21,8 @@ namespace class_absences_backend.Middlewares
         {
             try
             {
+                
+                context.Request.QueryString.Add(new QueryString());
                 await _next(context);
             }
 

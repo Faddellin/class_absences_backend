@@ -1,30 +1,24 @@
-﻿
-using BusinessLogic.ServiceInterfaces;
-using BusinessLogic.Services;
-using Common.DbModels;
+﻿using BusinessLogic.ServiceInterfaces;
 using Common.DtoModels;
 using Common.DtoModels.Others;
-using Common.DtoModels.Request;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel;
-using System.Globalization;
 
 namespace BusinessLogic.Controllers
 {
 
     [ApiController]
-    [Route("api/role")]
+    [Route("api/report")]
 
-    public class RolesController : ControllerBase
+    public class ReportsController : ControllerBase
     {
 
-        private readonly IRolesService _rolesService;
+        private readonly IReportService _reportService;
         private readonly ITokenService _tokenService;
 
-        public RolesController(IRolesService rolesService, ITokenService tokenService)
+        public ReportsController(IReportService reportService, ITokenService tokenService)
         {
-            _rolesService = rolesService;
+            _reportService = reportService;
             _tokenService = tokenService;
         }
 
@@ -40,26 +34,24 @@ namespace BusinessLogic.Controllers
         }
 
         /// <summary>
-        /// Change concrete user role
+        /// Get users absences report
         /// </summary>
-        /// <param name="targetUserId">ID of the user whose status will be changed</param>
-        /// <param name="userType">UserType</param>
-        /// <response code="200">User role was changed</response>
+        /// <response code="200">Successful</response>
         /// <response code="403">User doesn't have enough rights</response>
         /// <response code="400">Invalid arguments</response>
         /// <response code="500">Internal server error</response>
         [Authorize]
         [ProducesResponseType(typeof(ResponseModel), 500)]
-        [HttpPut("{targetUserId}")]
-        public async Task<IActionResult> ChangeRole(
-                [FromRoute] Guid targetUserId,
-                [FromQuery] UserType userType)
+        [HttpGet]
+        public async Task<IActionResult> GetUsersAbsencesReport(
+                [FromQuery] List<Guid> targetUsersId,
+                [FromQuery] DateTime dateFrom,
+                [FromQuery] DateTime dateTo)
         {
 
             var userId = await EnsureTokenIsValid();
 
-            //await _rolesService.ExportUserAbsencesInWord(from, to, new Guid("a31631e3-1ee5-4b8e-a997-458cd3aa6208"), new List<Guid> { targetUserId });
-            await _rolesService.ChangeRole(userId, targetUserId, userType);
+            await _reportService.ExportUserAbsencesInWord(dateFrom, dateTo, userId, targetUsersId);
 
             return Ok();
         }

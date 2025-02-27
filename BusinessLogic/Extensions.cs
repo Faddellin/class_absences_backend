@@ -11,6 +11,7 @@ public static class Extensions
         serviceCollection.AddScoped<IUserService, UserService>();
         serviceCollection.AddScoped<IRequestService, RequestService>();
         serviceCollection.AddScoped<IRefreshTokenService, RefreshTokenService>();
+        serviceCollection.AddScoped<IReportService, ReportService>();
         serviceCollection.AddSingleton<ITokenService, TokenService>();
         return serviceCollection;
     }

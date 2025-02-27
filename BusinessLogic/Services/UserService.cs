@@ -3,6 +3,7 @@ using Common.DbModels;
 using Common.DtoModels;
 using Common.DtoModels.Others;
 using Common.DtoModels.User;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLogic.Services;
@@ -27,6 +28,15 @@ public class UserService : IUserService
 
     public async Task<TokenResponseModel> Register(UserRegisterModel userRegisterModel)
     {
+        UserEntity? user = await _appDbContext.Users
+            .FirstOrDefaultAsync(x => x.Email == userRegisterModel.Email);
+
+
+        if (user != null)
+        {
+            throw new Exception("User with such Email already exists");
+        }
+
         var passwordService = new PasswordService();
 
         var userEntity = new UserEntity()

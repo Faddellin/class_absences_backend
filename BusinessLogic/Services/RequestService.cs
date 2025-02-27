@@ -7,14 +7,13 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Http;
+using BusinessLogic.Static;
 
 namespace BusinessLogic.Services;
 
 public class RequestService : IRequestService
 {
     private readonly AppDbContext _appDbContext;
-    
-    private readonly List<UserType> allRightsUsers = new List<UserType>() { UserType.Dean, UserType.Admin }; 
 
     public RequestService(AppDbContext appDbContext)
     {
@@ -22,32 +21,23 @@ public class RequestService : IRequestService
     }
 
 
-    public async Task<Guid> CreateRequest(RequestCreateModel requestCreateModel, Guid userId, IFormFileCollection files)
+    public async Task<Guid> CreateRequest(RequestCreateModel requestCreateModel, Guid userId, IFormFileCollection formFiles)
     {
+        Validator.ThrowIfFirstDateHigherThanSecond(requestCreateModel.AbsenceDateFrom, requestCreateModel.AbsenceDateTo);
+
         UserEntity? userEntity = await _appDbContext.Users.FirstOrDefaultAsync(o => o.Id == userId);
-
-        throwIfObjIsNull(userEntity);
-
-        if (requestCreateModel.AbsenceDateFrom >= requestCreateModel.AbsenceDateTo)
-        {
-            throw new ArgumentException("AbsenceDateFrom can't be higher than AbsenceDateTo");
-        }
+        Validator.ThrowIfNull(userEntity);
 
         var userRequests = await _appDbContext.Requests
-            .Where(r => r.User == userEntity)
+            .Where(r => r.User.Id == userEntity.Id)
             .ToListAsync();
-        foreach (var request in userRequests)
-        {
-            if (requestCreateModel.AbsenceDateFrom > request.AbsenceDateFrom &&
-                requestCreateModel.AbsenceDateFrom < request.AbsenceDateTo ||
-                requestCreateModel.AbsenceDateTo > request.AbsenceDateFrom &&
-                requestCreateModel.AbsenceDateTo < request.AbsenceDateTo)
-            {
-                throw new ArgumentException("Пересечение временного промежутка с какой-то другой заявкой");
-            }
-        }
+
+        Validator.ThrowIfRequestIntersectAnyOtherRequest(requestCreateModel, userRequests);
         
         var urlsList = new List<string>();
+       
+        var files = formFiles;
+
         if (files.Count > 0)
         {
             foreach (var file in files)
@@ -91,50 +81,37 @@ public class RequestService : IRequestService
 
     public async Task EditRequest(RequestEditModel requestEditModel, Guid requestId, Guid userId)
     {
+        Validator.ThrowIfFirstDateHigherThanSecond(requestEditModel.AbsenceDateFrom, requestEditModel.AbsenceDateTo);
+
         UserEntity? userEntity = await _appDbContext.Users.FirstOrDefaultAsync(o => o.Id == userId);
+        Validator.ThrowIfNull(userEntity);
+
         RequestEntity? requestEntity = await _appDbContext.Requests
             .Include(o => o.User)
             .Include(o => o.Checker)
             .FirstOrDefaultAsync(o => o.Id == requestId);
+        Validator.ThrowIfNull(requestEntity);
 
-        throwIfObjIsNull(userEntity);
-        throwIfObjIsNull(requestEntity);
-
-        if (requestEntity != null && userEntity != requestEntity.User && !allRightsUsers.Contains(userEntity.UserType))
+        if (userEntity != requestEntity.User)
         {
-            throw new AccessViolationException("User doesn't have enough rights");
+            Validator.ThrowIfNotEnoughAccess(userEntity.UserType, 2);
+        }
+        if (requestEditModel.Status != requestEntity.Status)
+        {
+            Validator.ThrowIfNotEnoughAccess(userEntity.UserType, 2);
+        }
+        if (requestEntity.Status == RequestStatus.Confirmed && UserAccess.GetUserAccesLevel(userEntity.UserType) < 2)
+        {
+            throw new AccessViolationException("User cannot edit this request because it has already been confirmed");
         }
 
-        if (requestEditModel.AbsenceDateFrom >= requestEditModel.AbsenceDateTo)
-        {
-            throw new ArgumentException("AbsenceDateFrom can't be higher than AbsenceDateTo");
-        }
-
-        if (requestEditModel.Status != null && userEntity.UserType == UserType.Student)
-        {
-            throw new AccessViolationException("User doesn't have enough rights");
-        }
-
-        if (requestEntity.Status is RequestStatus.Confirmed or RequestStatus.Rejected &&
-            userEntity.UserType == UserType.Student)
-        {
-            throw new AccessViolationException("User cannot edit this request due to its status");
-        }
-        
         var userRequests = await _appDbContext.Requests
-            .Where(r => r.User == requestEntity.User)
+            .Where(r => r.User.Id == userEntity.Id)
             .ToListAsync();
-        foreach (var request in userRequests)
-        {
-            if ((requestEditModel.AbsenceDateFrom > request.AbsenceDateFrom &&
-                requestEditModel.AbsenceDateFrom < request.AbsenceDateTo ||
-                requestEditModel.AbsenceDateTo > request.AbsenceDateFrom &&
-                requestEditModel.AbsenceDateTo < request.AbsenceDateTo) &&
-                request != requestEntity)
-            {
-                throw new ArgumentException("Пересечение временного промежутка с какой-то другой заявкой");
-            }
-        }
+
+        Validator.ThrowIfRequestIntersectAnyOtherRequest(requestEditModel, userRequests);
+
+
 
         if (requestEditModel.Status != null)
         {
@@ -156,9 +133,9 @@ public class RequestService : IRequestService
             .Include(r => r.User)
             .Include(r => r.Checker)
             .FirstOrDefaultAsync(r => r.User == user && r.Id == requestId);
-        
-        throwIfObjIsNull(user);
-        throwIfObjIsNull(request);
+
+        Validator.ThrowIfNull(user);
+        Validator.ThrowIfNull(request);
 
         if (request.Images.Count > 0)
         {
@@ -214,14 +191,10 @@ public class RequestService : IRequestService
                                                        DateTime? dateFrom, DateTime? dateTo, Guid userId)
     {
         UserEntity? userEntity = await _appDbContext.Users.FirstOrDefaultAsync(o => o.Id == userId);
+        Validator.ThrowIfNull(userEntity);
+        Validator.ThrowIfNotEnoughAccess(userEntity.UserType, 2);
 
-        throwIfObjIsNull(userEntity);
-
-        if (!allRightsUsers.Contains(userEntity.UserType))
-        {
-            throw new AccessViolationException("User doesn't have enough rights");
-        }
-
+        Validator.ThrowIfFirstDateHigherThanSecond(dateFrom, dateTo);
         if (dateFrom > dateTo)
         {
             throw new ArgumentException("DateFrom can't be higher than DateTo");
@@ -276,13 +249,12 @@ public class RequestService : IRequestService
             .Include(o => o.Checker)
             .FirstOrDefaultAsync(o => o.Id == requestId);
 
+        Validator.ThrowIfNull(userEntity);
+        Validator.ThrowIfNull(requestEntity);
 
-        throwIfObjIsNull(userEntity);
-        throwIfObjIsNull(requestEntity);
-
-        if (userEntity != requestEntity.User && !allRightsUsers.Contains(userEntity.UserType))
+        if (userEntity != requestEntity.User)
         {
-            throw new AccessViolationException("User doesn't have enough rights");
+            Validator.ThrowIfNotEnoughAccess(userEntity.UserType, 2);
         }
 
         RequestModel requestModel = new RequestModel()
@@ -311,21 +283,18 @@ public class RequestService : IRequestService
     public async Task<RequestListModel> GetUserRequests(SortType sortType, RequestStatus? requestStatus,
                                                        DateTime? dateFrom, DateTime? dateTo, Guid userId, Guid targetUserId)
     {
+        Validator.ThrowIfFirstDateHigherThanSecond(dateFrom, dateTo);
+
         UserEntity? userEntity = await _appDbContext.Users.FirstOrDefaultAsync(o => o.Id == userId);
+        Validator.ThrowIfNull(userEntity);
 
         UserEntity? targetUserEntity = await _appDbContext.Users.FirstOrDefaultAsync(o => o.Id == targetUserId);
+        Validator.ThrowIfNull(targetUserEntity);
 
-        throwIfObjIsNull(userEntity);
-        throwIfObjIsNull(targetUserEntity);
 
-        if (userEntity != targetUserEntity && !allRightsUsers.Contains(userEntity.UserType))
+        if (userEntity != targetUserEntity)
         {
-            throw new AccessViolationException("User doesn't have enough rights");
-        }
-
-        if (dateFrom > dateTo)
-        {
-            throw new ArgumentException("DateFrom can't be higher than DateTo");
+            Validator.ThrowIfNotEnoughAccess(userEntity.UserType, 2);
         }
 
 
@@ -385,14 +354,6 @@ public class RequestService : IRequestService
         }
 
         return requestEntitySorted;
-    }
-
-    private void throwIfObjIsNull<Object>(Object? obj)
-    {
-        if (obj == null)
-        {
-            throw new KeyNotFoundException($"{typeof(Object).Name} is not found");
-        }
     }
 
 }
