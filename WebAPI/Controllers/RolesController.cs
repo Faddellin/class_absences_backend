@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using System.Globalization;
+using class_absences_backend.Controllers;
 
 namespace BusinessLogic.Controllers
 {
@@ -16,27 +17,14 @@ namespace BusinessLogic.Controllers
     [ApiController]
     [Route("api/role")]
 
-    public class RolesController : ControllerBase
+    public class RolesController : BaseController
     {
 
         private readonly IRolesService _rolesService;
-        private readonly ITokenService _tokenService;
 
-        public RolesController(IRolesService rolesService, ITokenService tokenService)
+        public RolesController(IRolesService rolesService)
         {
             _rolesService = rolesService;
-            _tokenService = tokenService;
-        }
-
-        private async Task<Guid> EnsureTokenIsValid()
-        {
-            var token = Request.Headers.Authorization.ToString().Replace("Bearer ", "");
-            if (!await _tokenService.IsTokenValid(token))
-            {
-                throw new UnauthorizedAccessException();
-            }
-
-            return await _tokenService.GetUserIdFromToken(token);
         }
 
         /// <summary>
@@ -56,7 +44,7 @@ namespace BusinessLogic.Controllers
                 [FromQuery] UserType userType)
         {
 
-            var userId = await EnsureTokenIsValid();
+            var userId = GetUserId();
 
             //await _rolesService.ExportUserAbsencesInWord(from, to, new Guid("a31631e3-1ee5-4b8e-a997-458cd3aa6208"), new List<Guid> { targetUserId });
             await _rolesService.ChangeRole(userId, targetUserId, userType);

@@ -8,6 +8,7 @@ using Common.DtoModels.Request;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
+using class_absences_backend.Controllers;
 
 namespace BusinessLogic.Controllers
 {
@@ -15,27 +16,14 @@ namespace BusinessLogic.Controllers
     [ApiController]
     [Route("api/request")]
 
-    public class RequestController : ControllerBase
+    public class RequestController : BaseController
     {
 
         private readonly IRequestService _requestService;
-        private readonly ITokenService _tokenService;
 
-        public RequestController(IRequestService requestService, ITokenService tokenService)
+        public RequestController(IRequestService requestService)
         {
             _requestService = requestService;
-            _tokenService = tokenService;
-        }
-
-        private async Task<Guid> EnsureTokenIsValid()
-        {
-            var token = Request.Headers.Authorization.ToString().Replace("Bearer ", "");
-            if (!await _tokenService.IsTokenValid(token))
-            {
-                throw new UnauthorizedAccessException();
-            }
-
-            return await _tokenService.GetUserIdFromToken(token);
         }
 
         /// <summary>
@@ -55,7 +43,7 @@ namespace BusinessLogic.Controllers
             [FromForm] IFormFileCollection files)
         {
 
-            var userId = await EnsureTokenIsValid();
+            var userId = GetUserId();
 
             Guid requestId = await _requestService.CreateRequest(requestCreateModel, userId, files);
 
@@ -79,7 +67,7 @@ namespace BusinessLogic.Controllers
                 [FromRoute] Guid requestId)
         {
 
-            var userId = await EnsureTokenIsValid();
+            var userId = GetUserId();
 
             await _requestService.EditRequest(requestEditModel, requestId, userId);
 
@@ -100,7 +88,7 @@ namespace BusinessLogic.Controllers
             [FromForm] IFormFileCollection files)
         {
 
-            var userId = await EnsureTokenIsValid();
+            var userId = GetUserId();
 
             var requestModel = await _requestService.AddImagesToRequest(userId, requestId, files);
 
@@ -126,7 +114,7 @@ namespace BusinessLogic.Controllers
                 [FromQuery] DateTime? dateTo)
         {
 
-            var userId = await EnsureTokenIsValid();
+            var userId = GetUserId();
 
             RequestListModel requestListModel = await _requestService.GetAllRequests(sortType, requestStatus, userName, dateFrom, dateTo, userId);
 
@@ -152,7 +140,7 @@ namespace BusinessLogic.Controllers
                 [FromRoute] Guid targetUserId)
         {
 
-            var userId = await EnsureTokenIsValid();
+            var userId = GetUserId();
 
             RequestListModel requestListModel = await _requestService.GetUserRequests(sortType, requestStatus, dateFrom, dateTo, userId, targetUserId);
 
@@ -174,7 +162,7 @@ namespace BusinessLogic.Controllers
                 [FromRoute] Guid requestId)
         {
 
-            var userId = await EnsureTokenIsValid();
+            var userId = GetUserId();
 
             RequestModel requestModel = await _requestService.GetRequest(requestId, userId);
 

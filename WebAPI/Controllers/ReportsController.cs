@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.ServiceInterfaces;
+using class_absences_backend.Controllers;
 using Common.DtoModels;
 using Common.DtoModels.Others;
 using Microsoft.AspNetCore.Authorization;
@@ -10,27 +11,14 @@ namespace BusinessLogic.Controllers
     [ApiController]
     [Route("api/report")]
 
-    public class ReportsController : ControllerBase
+    public class ReportsController : BaseController
     {
 
         private readonly IReportService _reportService;
-        private readonly ITokenService _tokenService;
 
-        public ReportsController(IReportService reportService, ITokenService tokenService)
+        public ReportsController(IReportService reportService)
         {
             _reportService = reportService;
-            _tokenService = tokenService;
-        }
-
-        private async Task<Guid> EnsureTokenIsValid()
-        {
-            var token = Request.Headers.Authorization.ToString().Replace("Bearer ", "");
-            if (!await _tokenService.IsTokenValid(token))
-            {
-                throw new UnauthorizedAccessException();
-            }
-
-            return await _tokenService.GetUserIdFromToken(token);
         }
 
         /// <summary>
@@ -49,7 +37,7 @@ namespace BusinessLogic.Controllers
                 [FromQuery] DateTime dateTo)
         {
 
-            var userId = await EnsureTokenIsValid();
+            var userId = GetUserId();
 
             await _reportService.ExportUserAbsencesInWord(dateFrom, dateTo, userId, targetUsersId);
 

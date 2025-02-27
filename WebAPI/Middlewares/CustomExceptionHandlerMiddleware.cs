@@ -21,7 +21,7 @@ namespace class_absences_backend.Middlewares
         {
             try
             {
-                
+
                 context.Request.QueryString.Add(new QueryString());
                 await _next(context);
             }
@@ -40,6 +40,15 @@ namespace class_absences_backend.Middlewares
             {
 
                 await CreateExceptionMessage(context, _logger, _tokenService, e, 403, "Forbidden");
+            }
+            catch (UnauthorizedAccessException e)
+            {
+
+                await CreateExceptionMessage(context, _logger, _tokenService, e, 401, "Unauthorized");
+            }
+            catch (KeyNotFoundException e)
+            {
+                await CreateExceptionMessage(context, _logger, _tokenService, e, 404, "Not found");
             }
             catch (Exception e)
             {

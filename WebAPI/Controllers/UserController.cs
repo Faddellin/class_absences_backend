@@ -1,5 +1,3 @@
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Text.RegularExpressions;
 using BusinessLogic.ServiceInterfaces;
 using Common;
@@ -12,7 +10,7 @@ namespace class_absences_backend.Controllers;
 
 [ApiController]
 [Route("api/user")]
-public class UserController : ControllerBase
+public class UserController : BaseController
 {
     private readonly IUserService _userService;
     private readonly ITokenService _tokenService;
@@ -21,17 +19,6 @@ public class UserController : ControllerBase
     {
         _userService = userService;
         _tokenService = tokenService;
-    }
-    
-    private async Task<Guid> EnsureTokenIsValid()
-    {
-        var token = Request.Headers.Authorization.ToString().Replace("Bearer ", "");
-        if (!await _tokenService.IsTokenValid(token))
-        {
-            throw new UnauthorizedAccessException();
-        }
-        
-        return await _tokenService.GetUserIdFromToken(token);
     }
 
     /// <summary>
@@ -110,21 +97,13 @@ public class UserController : ControllerBase
     [HttpPost("logout")]
     public async Task<IActionResult> Logout()
     {
-        try
+        var token = Request.Headers.Authorization.ToString().Replace("Bearer ", "");
+        await _tokenService.AddInvalidToken(token);
+        return Ok(new ResponseModel
         {
-            await EnsureTokenIsValid();
-            var token = Request.Headers.Authorization.ToString().Replace("Bearer ", "");
-            await _tokenService.AddInvalidToken(token);
-            return Ok(new ResponseModel
-            {
-                Status = null,
-                Message = "Logged out"
-            });
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return Unauthorized();
-        }
+            Status = null,
+            Message = "Logged out"
+        });
     }
     
     /// <summary>
@@ -170,25 +149,11 @@ public class UserController : ControllerBase
     [HttpGet("profile")]
     public async Task<ActionResult<UserModel>> GetProfile()
     {
-        try
-        {
-            var userId = await EnsureTokenIsValid();
-            var doctorModel = await _userService.GetProfile(userId);
+        var userId = GetUserId();
+        
+        var doctorModel = await _userService.GetProfile(userId);
 
-            return Ok(doctorModel);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return Unauthorized();
-        }
-        catch (KeyNotFoundException)
-        {
-            return NotFound();
-        }
-        catch (Exception)
-        {
-            return Problem();
-        }
+        return Ok(doctorModel);
     }
     
     /// <summary>
@@ -208,34 +173,23 @@ public class UserController : ControllerBase
     [HttpPut("profile")]
     public async Task<IActionResult> ChangeProfile([FromBody] UserEditModel model)
     {
-        try
+        var userId = GetUserId();
+        
+        var isValid = ModelState.IsValid;
+        
+        if (!Regex.IsMatch(model.Password, RegexPatterns.Password))
         {
-            var userId = await EnsureTokenIsValid();
-            
-            var isValid = ModelState.IsValid;
-            
-            if (!Regex.IsMatch(model.Password, RegexPatterns.Password))
-            {
-                ModelState.AddModelError("Password", 
-                    "Password requires at least one digit");
-                isValid = false;
-            }
-            
-            if (!isValid)
-            {
-                return BadRequest(ModelState);
-            }
+            ModelState.AddModelError("Password", 
+                "Password requires at least one digit");
+            isValid = false;
+        }
+        
+        if (!isValid)
+        {
+            return BadRequest(ModelState);
+        }
 
-            await _userService.EditProfile(userId, model);
-            return Ok();
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return Unauthorized();
-        }
-        catch (Exception)
-        {
-            return NotFound();
-        }
+        await _userService.EditProfile(userId, model);
+        return Ok();
     }
 }
