@@ -4,6 +4,7 @@ using Common.DtoModels;
 using Common.DtoModels.Others;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
 
 namespace BusinessLogic.Controllers
 {
@@ -39,9 +40,9 @@ namespace BusinessLogic.Controllers
 
             var userId = (Guid)HttpContext.Items["userId"];
 
-            await _reportService.ExportUserAbsencesInWord(dateFrom, dateTo, userId, targetUsersId);
+            MemoryStream memoryWithReport = await _reportService.ExportUserAbsencesInWord(dateFrom, dateTo, userId, targetUsersId);
 
-            return Ok();
+            return File(memoryWithReport.ToArray(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "report.docx");
         }
 
 

@@ -35,7 +35,7 @@ public class ReportService : IReportService
         public RequestStatus reason;
     }
 
-    public async Task ExportUserAbsencesInWord(DateTime dateFrom, DateTime dateTo,
+    public async Task<MemoryStream> ExportUserAbsencesInWord(DateTime dateFrom, DateTime dateTo,
                                                Guid userId, List<Guid> targetUserId)
     {
         Validator.ThrowIfFirstDateHigherThanSecond(dateFrom, dateTo);
@@ -67,22 +67,27 @@ public class ReportService : IReportService
             pairsOfUserAndTheirAsences.Add(new Pair<UserEntity, List<RequestEntity>>(user, usersRequests));
         }
 
+        using (MemoryStream memoryStream = new MemoryStream())
+        {
+            CreateWordprocessingDocument(memoryStream, pairsOfUserAndTheirAsences, dateFrom, dateTo);
+            memoryStream.Position = 0;
 
-        CreateWordprocessingDocument(@"static\files\check.docx", pairsOfUserAndTheirAsences, dateFrom, dateTo);
+            return memoryStream;
+        }
     }
 
-    void CreateWordprocessingDocument(string filepath, List<Pair<UserEntity, List<RequestEntity>>> pairsOfUserAndTheirAsences,
+    void CreateWordprocessingDocument(MemoryStream memoryStream, List<Pair<UserEntity, List<RequestEntity>>> pairsOfUserAndTheirAsences,
                                     DateTime dateFrom, DateTime dateTo)
     {
 
-        using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(filepath, WordprocessingDocumentType.Document))
+        using (WordprocessingDocument wordDocument = WordprocessingDocument.Create(memoryStream, WordprocessingDocumentType.Document))
         {
             MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
 
             mainPart.Document = new Document();
             Body body = mainPart.Document.AppendChild(new Body());
 
-            AddParagraphToBody(body, $"Период даты отчёта: {dateFrom} ------ {dateTo}.", "20");
+            AddParagraphToBody(body, $"Период даты отчёта: {dateFrom} ------ {dateTo}.", "36");
 
             foreach (var userAbsencesPair in pairsOfUserAndTheirAsences)
             {
@@ -109,11 +114,11 @@ public class ReportService : IReportService
 
                 userType += $" {user.FirstName} {user.MiddleName} {user.LastName}.";
 
-                AddParagraphToBody(body, userType, "16");
+                AddParagraphToBody(body, userType, "30");
 
                 if (userAbsences.Count() == 0)
                 {
-                    AddParagraphToBody(body, "Нет пропусков за данный период.", "13");
+                    AddParagraphToBody(body, "Нет пропусков за данный период.", "26");
                 }
                 else
                 {
@@ -122,7 +127,7 @@ public class ReportService : IReportService
                     foreach (var date in segmentsOfDates)
                     {
                         string reasonType = date.reason == RequestStatus.Confirmed ? "уважительной" : "неуважительной";
-                        AddParagraphToBody(body, $"Отсутствовал с {date.startDate} по {date.endDate} по {reasonType} причине", "13");
+                        AddParagraphToBody(body, $"Отсутствовал с {date.startDate.ToLocalTime()} по {date.endDate.ToLocalTime()} по {reasonType} причине", "26");
 
                     }
                 }

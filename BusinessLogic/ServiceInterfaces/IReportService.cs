@@ -3,6 +3,6 @@
 public interface IReportService
 {
 
-    public Task ExportUserAbsencesInWord(DateTime dateFrom, DateTime dateTo, Guid userId, List<Guid> targetUserId);
+    public Task<MemoryStream> ExportUserAbsencesInWord(DateTime dateFrom, DateTime dateTo, Guid userId, List<Guid> targetUserId);
 
 }
