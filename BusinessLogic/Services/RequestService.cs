@@ -46,7 +46,7 @@ public class RequestService : IRequestService
                 {
                     var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
                     var filePath = Path.Combine("static/images/reasons", fileName);
-                    urlsList.Add(filePath);
+                    fileNames.Add(fileName);
 
                     using var stream = new MemoryStream();
                     await file.CopyToAsync(stream);
@@ -66,7 +66,7 @@ public class RequestService : IRequestService
             Description = requestCreateModel.Description,
             Status = RequestStatus.Checking,
             User = userEntity,
-            Images = urlsList,
+            Images = fileNames,
             AbsenceDateFrom = DateTime.SpecifyKind(requestCreateModel.AbsenceDateFrom, DateTimeKind.Utc),
             AbsenceDateTo = DateTime.SpecifyKind(requestCreateModel.AbsenceDateTo, DateTimeKind.Utc)
         };
@@ -142,7 +142,7 @@ public class RequestService : IRequestService
             throw new Exception("This request already has images");
         }
     
-        var urlsList = new List<string>();
+        var fileNames = new List<string>();
         if (files.Count > 0)
         {
             foreach (var file in files)
@@ -151,7 +151,7 @@ public class RequestService : IRequestService
                 {
                     var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
                     var filePath = Path.Combine("static/images/reasons", fileName);
-                    urlsList.Add(filePath);
+                    fileNames.Add(fileName);
 
                     using var stream = new MemoryStream();
                     await file.CopyToAsync(stream);
@@ -163,7 +163,7 @@ public class RequestService : IRequestService
             }           
         }
         
-        request.Images.AddRange(urlsList);
+        request.Images.AddRange(fileNames);
         await _appDbContext.SaveChangesAsync();
 
         var requestModel = new RequestModel
