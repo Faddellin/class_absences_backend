@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Faddellin\\MyCodes\\class_absences_backend\\Common\\Common.csproj": {}
+    "C:\\Users\\а\\RiderProjects\\class_absences_backend\\Common\\Common.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Faddellin\\MyCodes\\class_absences_backend\\Common\\Common.csproj": {
+    "C:\\Users\\а\\RiderProjects\\class_absences_backend\\Common\\Common.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Faddellin\\MyCodes\\class_absences_backend\\Common\\Common.csproj",
+        "projectUniqueName": "C:\\Users\\а\\RiderProjects\\class_absences_backend\\Common\\Common.csproj",
         "projectName": "Common",
-        "projectPath": "C:\\Users\\Faddellin\\MyCodes\\class_absences_backend\\Common\\Common.csproj",
-        "packagesPath": "C:\\Users\\Faddellin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Faddellin\\MyCodes\\class_absences_backend\\Common\\obj\\",
+        "projectPath": "C:\\Users\\а\\RiderProjects\\class_absences_backend\\Common\\Common.csproj",
+        "packagesPath": "C:\\Users\\а\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\а\\RiderProjects\\class_absences_backend\\Common\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Faddellin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\а\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,6 +22,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -73,6 +74,22 @@
               "target": "Package",
               "version": "[9.0.3, )"
             },
+            "Quartz": {
+              "target": "Package",
+              "version": "[3.13.1, )"
+            },
+            "Quartz.AspNetCore": {
+              "target": "Package",
+              "version": "[3.13.1, )"
+            },
+            "Quartz.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[3.13.1, )"
+            },
+            "Quartz.Serialization.SystemTextJson": {
+              "target": "Package",
+              "version": "[3.13.1, )"
+            },
             "jose-jwt": {
               "target": "Package",
               "version": "[5.1.1, )"
@@ -94,7 +111,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

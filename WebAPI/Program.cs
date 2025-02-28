@@ -3,12 +3,14 @@ using System.Text;
 using System.Text.Json.Serialization;
 using BusinessLogic;
 using class_absences_backend;
+using class_absences_backend.Jobs;
 using class_absences_backend.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Quartz;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -78,6 +80,23 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<TokenValidationFilter>();
+});
+
+builder.Services.AddQuartz(configure =>
+{
+    var jwtJobKey = new JobKey(nameof(RemoveJwtJob));
+    
+    var intervalForRemovingJwt = configuration
+        .GetSection("Scheduler:JwtRemoverIntervalInMinutes")
+        .Get<int>();
+    
+    configure.AddJob<RemoveJwtJob>(jwtJobKey)
+        .AddTrigger(trigger => trigger.ForJob(jwtJobKey).WithSimpleSchedule(
+            schedule => schedule.WithIntervalInMinutes(intervalForRemovingJwt).RepeatForever()));
+});
+builder.Services.AddQuartzHostedService(options =>
+{
+    options.WaitForJobsToComplete = true;
 });
 
 builder.Services.AddCors(options =>

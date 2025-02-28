@@ -7,6 +7,7 @@ using DocumentFormat.OpenXml;
 using Microsoft.EntityFrameworkCore;
 using BusinessLogic.ServiceInterfaces;
 using BusinessLogic.Static;
+using Common.DtoModels.User;
 
 namespace BusinessLogic.Services;
 
@@ -43,17 +44,16 @@ public class ReportService : IReportService
         UserEntity? userEntity = await _appDbContext.Users.FirstOrDefaultAsync(o => o.Id == userId);
         Validator.ThrowIfNull(userEntity);
         Validator.ThrowIfNotEnoughAccess(userEntity.UserType, 1);
+        Validator.ThrowIfFirstDateHigherThanSecond(dateFrom, dateTo);
 
         List<UserEntity>? targetUserEntity = await _appDbContext.Users.Where(o => targetUserId.Contains(o.Id)).ToListAsync();
 
-        foreach (var targetUser in targetUserEntity)
+        var missingIds = targetUserId.Except(targetUserEntity.Select(e => e.Id)).ToList();
+        if (missingIds.Any())
         {
-            if (!targetUserId.Contains(targetUser.Id))
-            {
-                throw new KeyNotFoundException($"User ({targetUser.Id}) is not found");
-            }
+            throw new KeyNotFoundException($"Users with IDs ({string.Join(", ", missingIds)}) are not found");
         }
-
+        
         List<Pair<UserEntity, List<RequestEntity>>> pairsOfUserAndTheirAsences = new List<Pair<UserEntity, List<RequestEntity>>>();
 
         foreach (var user in targetUserEntity)
@@ -74,6 +74,35 @@ public class ReportService : IReportService
 
             return memoryStream;
         }
+    }
+
+    public async Task<UserListModel?> GetAllUsers(Guid userId)
+    {
+        var user = await _appDbContext.Users.FindAsync(userId);
+        Validator.ThrowIfNull(user);
+        Validator.ThrowIfNotEnoughAccess(user.UserType, 1);
+
+        var users = await _appDbContext.Users
+            .Where(u => u.UserType != UserType.Admin).ToListAsync();
+        var userModels = new UserListModel
+        {
+            UsersList = []
+        };
+        foreach (var userEntity in users)
+        {
+            var userModel = new UserModel
+            {
+                Email = userEntity.Email,
+                FirstName = userEntity.FirstName,
+                Id = userEntity.Id,
+                LastName = userEntity.LastName,
+                MiddleName = userEntity.MiddleName,
+                UserType = userEntity.UserType
+            };
+            userModels.UsersList?.Add(userModel);
+        }
+
+        return userModels;
     }
 
     void CreateWordprocessingDocument(MemoryStream memoryStream, List<Pair<UserEntity, List<RequestEntity>>> pairsOfUserAndTheirAsences,

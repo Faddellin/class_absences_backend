@@ -5,6 +5,7 @@ using Common.DtoModels.Others;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
+using Common.DtoModels.User;
 
 namespace BusinessLogic.Controllers
 {
@@ -45,7 +46,23 @@ namespace BusinessLogic.Controllers
             return File(memoryWithReport.ToArray(), "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "report.docx");
         }
 
+        /// <summary>
+        /// Get all users
+        /// </summary>
+        /// <response code="200">Successful</response>
+        /// <response code="403">User doesn't have enough rights</response>
+        /// <response code="500">Internal server error</response>
+        [Authorize]
+        [ProducesResponseType(typeof(ResponseModel), 500)]
+        [HttpGet("users")]
+        public async Task<ActionResult<UserListModel>> GetUsers()
+        {
+            var userId = (Guid)HttpContext.Items["userId"];
 
+            var userModels = await _reportService.GetAllUsers(userId);
+
+            return Ok(userModels);
+        }
 
     }
 }
