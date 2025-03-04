@@ -95,7 +95,7 @@ public class RequestService : IRequestService
         {
             Validator.ThrowIfNotEnoughAccess(userEntity.UserType, 2);
         }
-        if (requestEditModel.Status != requestEntity.Status)
+        if (requestEditModel.Status != requestEntity.Status && requestEditModel.Status != null)
         {
             Validator.ThrowIfNotEnoughAccess(userEntity.UserType, 2);
         }
@@ -103,14 +103,12 @@ public class RequestService : IRequestService
         {
             throw new AccessViolationException("User cannot edit this request because it has already been confirmed");
         }
-
+        
         var userRequests = await _appDbContext.Requests
             .Where(r => r.User.Id == userEntity.Id)
             .ToListAsync();
-
-        Validator.ThrowIfRequestIntersectAnyOtherRequest(requestEditModel, userRequests);
-
-
+        
+        Validator.ThrowIfRequestIntersectAnyOtherRequest(requestEditModel, requestEntity, userRequests);
 
         if (requestEditModel.Status != null)
         {

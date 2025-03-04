@@ -43,16 +43,17 @@ public static class Validator
         }
     }
 
-    public static void ThrowIfRequestIntersectAnyOtherRequest(RequestEntity request, List<RequestEntity> otherRequests)
+    public static void ThrowIfRequestIntersectAnyOtherRequest(RequestEditModel requestEditModel, RequestEntity request, List<RequestEntity> otherRequests)
     {
         foreach (var otherRequest in otherRequests)
         {
-            if (request.AbsenceDateFrom > otherRequest.AbsenceDateFrom &&
-                request.AbsenceDateFrom < otherRequest.AbsenceDateTo ||
-                request.AbsenceDateTo > otherRequest.AbsenceDateFrom &&
-                request.AbsenceDateTo < otherRequest.AbsenceDateTo ||
-                request.AbsenceDateTo == otherRequest.AbsenceDateTo && 
-                request.AbsenceDateFrom == otherRequest.AbsenceDateFrom)
+            if ((requestEditModel.AbsenceDateFrom > otherRequest.AbsenceDateFrom &&
+                 requestEditModel.AbsenceDateFrom < otherRequest.AbsenceDateTo ||
+                 requestEditModel.AbsenceDateTo > otherRequest.AbsenceDateFrom &&
+                 requestEditModel.AbsenceDateTo < otherRequest.AbsenceDateTo ||
+                 requestEditModel.AbsenceDateTo == otherRequest.AbsenceDateTo && 
+                 requestEditModel.AbsenceDateFrom == otherRequest.AbsenceDateFrom) && 
+                request != otherRequest)
             {
                 throw new ArgumentException("Request date range intersects with other request from this user");
             }
@@ -60,22 +61,6 @@ public static class Validator
     }
 
     public static void ThrowIfRequestIntersectAnyOtherRequest(RequestCreateModel request, List<RequestEntity> otherRequests)
-    {
-        foreach (var otherRequest in otherRequests)
-        {
-            if (request.AbsenceDateFrom > otherRequest.AbsenceDateFrom &&
-                request.AbsenceDateFrom < otherRequest.AbsenceDateTo ||
-                request.AbsenceDateTo > otherRequest.AbsenceDateFrom &&
-                request.AbsenceDateTo < otherRequest.AbsenceDateTo ||
-                request.AbsenceDateTo == otherRequest.AbsenceDateTo && 
-                request.AbsenceDateFrom == otherRequest.AbsenceDateFrom)
-            {
-                throw new ArgumentException("Request date range intersects with other request from this user");
-            }
-        }
-    }
-
-    public static void ThrowIfRequestIntersectAnyOtherRequest(RequestEditModel request, List<RequestEntity> otherRequests)
     {
         foreach (var otherRequest in otherRequests)
         {
