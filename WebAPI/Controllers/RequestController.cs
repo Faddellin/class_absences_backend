@@ -63,36 +63,16 @@ namespace BusinessLogic.Controllers
         [Authorize]
         [HttpPut("{requestId}")]
         public async Task<IActionResult> EditRequest(
-                [FromBody] RequestEditModel requestEditModel,
-                [FromRoute] Guid requestId)
+                [FromForm] RequestEditModel requestEditModel,
+                [FromRoute] Guid requestId,
+                [FromForm] IFormFileCollection newImages)
         {
 
             var userId = (Guid)HttpContext.Items["userId"];
 
-            await _requestService.EditRequest(requestEditModel, requestId, userId);
+            await _requestService.EditRequest(requestEditModel, newImages, requestId, userId);
 
             return Ok();
-        }
-        
-        /// <summary>
-        /// Add images to request
-        /// </summary>
-        /// <response code="200">Images were added</response>
-        /// <response code="403">User doesn't have enough rights</response>
-        /// <response code="500">Internal server error</response>
-        [Authorize]
-        [ProducesResponseType(typeof(Guid), 200)]
-        [ProducesResponseType(typeof(ResponseModel), 500)]
-        [HttpPost("{requestId:guid}/addImages")]
-        public async Task<ActionResult<Guid>> AddImagesToRequest([FromRoute] Guid requestId,
-            [FromForm] IFormFileCollection files)
-        {
-
-            var userId = (Guid)HttpContext.Items["userId"];
-
-            var requestModel = await _requestService.AddImagesToRequest(userId, requestId, files);
-
-            return Ok(requestModel);
         }
 
         /// <summary>

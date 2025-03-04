@@ -11,9 +11,9 @@ public interface IRequestService
 
     // public Task ChangeRequestReason(Guid reasonId, Guid requestId, Guid userId);
 
-    public Task EditRequest(RequestEditModel requestEditModel, Guid requestId, Guid userId);
+    public Task EditRequest(RequestEditModel requestEditModel, IFormFileCollection newImages, Guid requestId, Guid userId);
 
-    public Task<RequestModel> AddImagesToRequest(Guid userId, Guid requestId, IFormFileCollection files);
+    //public Task<RequestModel> AddImagesToRequest(Guid userId, Guid requestId, IFormFileCollection files);
 
     public Task<RequestListModel> GetAllRequests(SortType sortType, RequestStatus? requestStatus, string? userName, DateTime? dateFrom, DateTime? dateTo, Guid userId);
 

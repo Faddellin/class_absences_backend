@@ -5,6 +5,8 @@ namespace Common.DtoModels.Request;
 public class RequestEditModel
 {
     public RequestStatus? Status { get; set; }
+
+    public List<string>? Images { get; set; }
     [Required]
     public string Description { get; set; }
     [Required]

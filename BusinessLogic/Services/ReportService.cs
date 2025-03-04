@@ -116,7 +116,7 @@ public class ReportService : IReportService
             mainPart.Document = new Document();
             Body body = mainPart.Document.AppendChild(new Body());
 
-            AddParagraphToBody(body, $"Период даты отчёта: {dateFrom} ------ {dateTo}.", "36");
+            AddParagraphToBody(body, $"Период даты отчёта: {dateFrom} ------ {dateTo}.", "30");
 
             foreach (var userAbsencesPair in pairsOfUserAndTheirAsences)
             {
@@ -143,11 +143,11 @@ public class ReportService : IReportService
 
                 userType += $" {user.FirstName} {user.MiddleName} {user.LastName}.";
 
-                AddParagraphToBody(body, userType, "30");
+                AddParagraphToBody(body, userType, "28");
 
                 if (userAbsences.Count() == 0)
                 {
-                    AddParagraphToBody(body, "Нет пропусков за данный период.", "26");
+                    AddParagraphToBody(body, "Нет пропусков за данный период.", "24");
                 }
                 else
                 {
@@ -156,7 +156,7 @@ public class ReportService : IReportService
                     foreach (var date in segmentsOfDates)
                     {
                         string reasonType = date.reason == RequestStatus.Confirmed ? "уважительной" : "неуважительной";
-                        AddParagraphToBody(body, $"Отсутствовал с {date.startDate.ToLocalTime()} по {date.endDate.ToLocalTime()} по {reasonType} причине", "26");
+                        AddParagraphToBody(body, $"Отсутствовал с {date.startDate.ToLocalTime()} по {date.endDate.ToLocalTime()} по {reasonType} причине", "24");
 
                     }
                 }

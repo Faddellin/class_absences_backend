@@ -32,31 +32,8 @@ public class RequestService : IRequestService
             .ToListAsync();
 
         Validator.ThrowIfRequestIntersectAnyOtherRequest(requestCreateModel, userRequests);
-        
-        var fileNames = new List<string>();
-       
-        var files = formFiles;
 
-        if (files.Count > 0)
-        {
-            foreach (var file in files)
-            {
-                if (file.Length > 0)
-                {
-                    var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-                    var filePath = Path.Combine("static/images/reasons", fileName);
-                    fileNames.Add(fileName);
-
-                    using var stream = new MemoryStream();
-                    await file.CopyToAsync(stream);
-                    stream.Position = 0;
-
-                    using var image = await Image.LoadAsync(stream);
-                    await image.SaveAsync(filePath, new JpegEncoder());
-                }
-            }           
-        }
-
+        var fileNames = await CreatePhotoFiles(formFiles);
 
         RequestEntity newRequest = new RequestEntity()
         {
@@ -76,9 +53,35 @@ public class RequestService : IRequestService
         return newRequest.Id;
     }
 
+    private async Task<List<string>> CreatePhotoFiles(IFormFileCollection formFiles)
+    {
+        var fileNames = new List<string>();
 
+        var files = formFiles;
 
-    public async Task EditRequest(RequestEditModel requestEditModel, Guid requestId, Guid userId)
+        if (files.Count > 0)
+        {
+            foreach (var file in files)
+            {
+                if (file.Length > 0)
+                {
+                    var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
+                    var filePath = "static/images/reasons/" + fileName;
+                    fileNames.Add(filePath);
+
+                    using var stream = new MemoryStream();
+                    await file.CopyToAsync(stream);
+                    stream.Position = 0;
+
+                    using var image = await Image.LoadAsync(stream);
+                    await image.SaveAsync(filePath, new JpegEncoder());
+                }
+            }
+        }
+        return fileNames;
+    }
+
+    public async Task EditRequest(RequestEditModel requestEditModel, IFormFileCollection newImages, Guid requestId, Guid userId)
     {
         Validator.ThrowIfFirstDateHigherThanSecond(requestEditModel.AbsenceDateFrom, requestEditModel.AbsenceDateTo);
 
@@ -111,79 +114,38 @@ public class RequestService : IRequestService
         Validator.ThrowIfRequestIntersectAnyOtherRequest(requestEditModel, userRequests);
 
 
-
         if (requestEditModel.Status != null)
         {
             requestEntity.Status = (RequestStatus)requestEditModel.Status;
             requestEntity.Checker = userEntity;
         }
+
+        List<string> editedImages = new List<string>();
+
+        if (requestEditModel.Images != null)
+        {
+            foreach (var url in requestEntity.Images)
+            {
+                if (!requestEditModel.Images.Contains(url))
+                {
+                    File.Delete(url);
+                }
+                else
+                {
+                    editedImages.Add(url);
+                }
+            }
+        }
+
+        var fileNames = await CreatePhotoFiles(newImages);
+        editedImages = editedImages.Union(fileNames).ToList();
+
         requestEntity.AbsenceDateFrom = DateTime.SpecifyKind(requestEditModel.AbsenceDateFrom, DateTimeKind.Utc);
         requestEntity.AbsenceDateTo = DateTime.SpecifyKind(requestEditModel.AbsenceDateTo, DateTimeKind.Utc);
         requestEntity.Description = requestEditModel.Description;
+        requestEntity.Images = editedImages;
 
         await _appDbContext.SaveChangesAsync();
-    }
-
-    public async Task<RequestModel> AddImagesToRequest(Guid userId, Guid requestId, IFormFileCollection files)
-    {
-        var user = await _appDbContext.Users
-            .FindAsync(userId);
-        var request = await _appDbContext.Requests
-            .Include(r => r.User)
-            .Include(r => r.Checker)
-            .FirstOrDefaultAsync(r => r.User == user && r.Id == requestId);
-
-        Validator.ThrowIfNull(user);
-        Validator.ThrowIfNull(request);
-
-        if (request.Images.Count > 0)
-        {
-            throw new Exception("This request already has images");
-        }
-    
-        var fileNames = new List<string>();
-        if (files.Count > 0)
-        {
-            foreach (var file in files)
-            {
-                if (file.Length > 0)
-                {
-                    var fileName = Guid.NewGuid() + Path.GetExtension(file.FileName);
-                    var filePath = Path.Combine("static/images/reasons", fileName);
-                    fileNames.Add(fileName);
-
-                    using var stream = new MemoryStream();
-                    await file.CopyToAsync(stream);
-                    stream.Position = 0;
-
-                    using var image = await Image.LoadAsync(stream);
-                    await image.SaveAsync(filePath, new JpegEncoder());
-                }
-            }           
-        }
-        
-        request.Images.AddRange(fileNames);
-        await _appDbContext.SaveChangesAsync();
-
-        var requestModel = new RequestModel
-        {
-            AbsenceDateFrom = request.AbsenceDateFrom,
-            AbsenceDateTo = request.AbsenceDateTo,
-            CreateTime = request.CreateTime,
-            FirstName = request.User.FirstName,
-            Id = request.Id,
-            Description = request.Description,
-            LastName = request.User.LastName,
-            MiddleName = request.User.MiddleName,
-            Images = request.Images,
-            Status = request.Status,
-            UserId = request.User.Id,
-            UserType = request.User.UserType,
-            CheckerUsername = request.Checker == null? null:
-                $"{request.Checker.LastName} {request.Checker.FirstName} {request.Checker.MiddleName}"
-        };
-
-        return requestModel;
     }
 
     public async Task<RequestListModel> GetAllRequests(SortType sortType, RequestStatus? requestStatus, string? userName,
@@ -212,7 +174,7 @@ public class RequestService : IRequestService
         List<RequestEntity> requestEntityList = await _appDbContext.Requests
             .Include(o => o.User)
             .Where(o => (requestStatus == null || o.Status == requestStatus) &&
-            (o.User.FirstName).ToLower().Contains(userName) &&
+            (o.User.LastName + " " + o.User.FirstName + " " + o.User.MiddleName).ToLower().Contains(userName) &&
             (dateFrom == null || o.CreateTime >= dateFrom) &&
             (dateTo == null || o.CreateTime <= dateTo)).ToListAsync();
 
