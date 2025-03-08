@@ -96,13 +96,13 @@ public class RequestService : IRequestService
 
         if (userEntity != requestEntity.User)
         {
-            Validator.ThrowIfNotEnoughAccess(userEntity.UserType, 2);
+            Validator.ThrowIfNotEnoughAccess(userEntity.UserTypes.Max(), 2);
         }
         if (requestEditModel.Status != requestEntity.Status && requestEditModel.Status != null)
         {
-            Validator.ThrowIfNotEnoughAccess(userEntity.UserType, 2);
+            Validator.ThrowIfNotEnoughAccess(userEntity.UserTypes.Max(), 2);
         }
-        if (requestEntity.Status == RequestStatus.Confirmed && UserAccess.GetUserAccesLevel(userEntity.UserType) < 2)
+        if (requestEntity.Status == RequestStatus.Confirmed && UserAccess.GetUserAccesLevel(userEntity.UserTypes.Max()) < 2)
         {
             throw new AccessViolationException("User cannot edit this request because it has already been confirmed");
         }
@@ -152,7 +152,7 @@ public class RequestService : IRequestService
     {
         UserEntity? userEntity = await _appDbContext.Users.FirstOrDefaultAsync(o => o.Id == userId);
         Validator.ThrowIfNull(userEntity);
-        Validator.ThrowIfNotEnoughAccess(userEntity.UserType, 2);
+        Validator.ThrowIfNotEnoughAccess(userEntity.UserTypes.Max(), 2);
 
         Validator.ThrowIfFirstDateHigherThanSecond(dateFrom, dateTo);
         if (dateFrom > dateTo)
@@ -190,7 +190,6 @@ public class RequestService : IRequestService
                 Id = requestEntity.Id,
                 Status = requestEntity.Status,
                 Username = $"{requestEntity.User.LastName} {requestEntity.User.FirstName} {requestEntity.User.MiddleName}",
-                UserType = requestEntity.User.UserType,
                 AbsenceDateFrom = requestEntity.AbsenceDateFrom,
                 AbsenceDateTo = requestEntity.AbsenceDateTo
             });
@@ -214,7 +213,7 @@ public class RequestService : IRequestService
 
         if (userEntity != requestEntity.User)
         {
-            Validator.ThrowIfNotEnoughAccess(userEntity.UserType, 2);
+            Validator.ThrowIfNotEnoughAccess(userEntity.UserTypes.Max(), 2);
         }
 
         RequestModel requestModel = new RequestModel()
@@ -227,7 +226,6 @@ public class RequestService : IRequestService
             LastName = requestEntity.User.LastName,
             Description = requestEntity.Description,
             Images = requestEntity.Images,
-            UserType = requestEntity.User.UserType,
             UserId = requestEntity.User.Id,
             AbsenceDateFrom = requestEntity.AbsenceDateFrom,
             AbsenceDateTo = requestEntity.AbsenceDateTo,
@@ -254,7 +252,7 @@ public class RequestService : IRequestService
 
         if (userEntity != targetUserEntity)
         {
-            Validator.ThrowIfNotEnoughAccess(userEntity.UserType, 2);
+            Validator.ThrowIfNotEnoughAccess(userEntity.UserTypes.Max(), 2);
         }
 
 
@@ -278,7 +276,6 @@ public class RequestService : IRequestService
                 Id = requestEntity.Id,
                 Status = requestEntity.Status,
                 Username = $"{requestEntity.User.LastName} {requestEntity.User.FirstName} {requestEntity.User.MiddleName}",
-                UserType = requestEntity.User.UserType,
                 AbsenceDateFrom = requestEntity.AbsenceDateFrom,
                 AbsenceDateTo = requestEntity.AbsenceDateTo
             });

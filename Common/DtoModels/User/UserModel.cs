@@ -19,5 +19,5 @@ public class UserModel
     [MinLength(1)]
     public string Email { get; set; } = string.Empty;
     [Required]
-    public UserType UserType { get; set; }
+    public List<UserType> UserTypes { get; set; }
 }

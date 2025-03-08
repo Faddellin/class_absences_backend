@@ -7,5 +7,6 @@ namespace BusinessLogic.ServiceInterfaces;
 
 public interface IRolesService
 {
-    public Task ChangeRole(Guid userId, Guid targetUserId, UserType newUserType);
+    public Task AddRole(Guid userId, Guid targetUserId, UserType newUserType);
+    public Task DeleteRole(Guid userId, Guid targetUserId, UserType newUserType);
 }

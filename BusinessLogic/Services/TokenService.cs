@@ -49,8 +49,7 @@ public class TokenService : ITokenService
         {
             Subject = new ClaimsIdentity([
                 new Claim("user_id", user.Id.ToString()),
-                new Claim("token_id", Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Role, user.UserType.ToString())
+                new Claim("token_id", Guid.NewGuid().ToString())
             ]),
             Expires = DateTime.UtcNow.AddMinutes(expireTime),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),

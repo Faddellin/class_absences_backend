@@ -26,7 +26,7 @@ public class RolesService : IRolesService
     }
 
 
-    public async Task ChangeRole(Guid userId, Guid targetUserId, UserType newUserType)
+    public async Task AddRole(Guid userId, Guid targetUserId, UserType newUserType)
     {
         UserEntity? userEntity = await _appDbContext.Users.FirstOrDefaultAsync(o => o.Id == userId);
         UserEntity? targetUserEntity = await _appDbContext.Users.FirstOrDefaultAsync(o => o.Id == targetUserId);
@@ -34,11 +34,54 @@ public class RolesService : IRolesService
         Validator.ThrowIfNull(userEntity);
         Validator.ThrowIfNull(targetUserEntity);
 
-        Validator.ThrowIfNotEnoughAccess(userEntity.UserType, targetUserEntity.UserType);
-        Validator.ThrowIfNotEnoughAccess(userEntity.UserType, newUserType);
+        Validator.ThrowIfNotEnoughAccess(userEntity.UserTypes.Max(), 2);
+        Validator.ThrowIfNotEnoughAccess(userEntity.UserTypes.Max(), targetUserEntity.UserTypes.Max());
+        Validator.ThrowIfNotEnoughAccess(userEntity.UserTypes.Max(), newUserType);
+        
+        if (userId == targetUserId)
+        {
+            Validator.ThrowIfNotEnoughAccess(userEntity.UserTypes.Max(), 3);
+        }
 
+        if (targetUserEntity.UserTypes.Contains(newUserType))
+        {
+            throw new ArgumentException("User already has this role");
+        }
 
-        targetUserEntity.UserType = newUserType;
+        targetUserEntity.UserTypes.Add(newUserType);
+        await _appDbContext.SaveChangesAsync();
+
+        return;
+    }
+
+    public async Task DeleteRole(Guid userId, Guid targetUserId, UserType newUserType)
+    {
+        UserEntity? userEntity = await _appDbContext.Users.FirstOrDefaultAsync(o => o.Id == userId);
+        UserEntity? targetUserEntity = await _appDbContext.Users.FirstOrDefaultAsync(o => o.Id == targetUserId);
+
+        Validator.ThrowIfNull(userEntity);
+        Validator.ThrowIfNull(targetUserEntity);
+
+        Validator.ThrowIfNotEnoughAccess(userEntity.UserTypes.Max(), 2);
+        Validator.ThrowIfNotEnoughAccess(userEntity.UserTypes.Max(), targetUserEntity.UserTypes.Max());
+        Validator.ThrowIfNotEnoughAccess(userEntity.UserTypes.Max(), newUserType);
+
+        if (userId == targetUserId)
+        {
+            Validator.ThrowIfNotEnoughAccess(userEntity.UserTypes.Max(), 3);
+        }
+
+        if (!targetUserEntity.UserTypes.Contains(newUserType))
+        {
+            throw new ArgumentException("User doesn't have this role");
+        }
+
+        if (targetUserEntity.UserTypes.Count() == 1)
+        {
+            throw new ArgumentException("Can't delete last user role");
+        }
+
+        targetUserEntity.UserTypes.Remove(newUserType);
         await _appDbContext.SaveChangesAsync();
 
         return;

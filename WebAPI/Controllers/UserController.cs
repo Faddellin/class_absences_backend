@@ -155,7 +155,29 @@ public class UserController : ControllerBase
 
         return Ok(doctorModel);
     }
-    
+
+    /// <summary>
+    /// Get user roles
+    /// </summary>
+    /// <response code="200">Success</response>
+    /// <response code="401">Unauthorized</response>
+    /// <response code="404">Not found</response>
+    /// <response code="500">InternalServerError</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserModel))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = null!)]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = null!)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseModel))]
+    [Authorize]
+    [HttpGet("roles")]
+    public async Task<ActionResult<UserRolesModel>> GetRoles()
+    {
+        var userId = (Guid)HttpContext.Items["userId"];
+
+        UserRolesModel doctorModel = await _userService.GetUserRoles(userId);
+
+        return Ok(doctorModel);
+    }
+
     /// <summary>
     /// Edit user profile
     /// </summary>

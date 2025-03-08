@@ -1,4 +1,5 @@
 using BusinessLogic.ServiceInterfaces;
+using BusinessLogic.Static;
 using Common.DbModels;
 using Common.DtoModels;
 using Common.DtoModels.Others;
@@ -46,9 +47,9 @@ public class UserService : IUserService
             MiddleName = userRegisterModel.MiddleName,
             LastName = userRegisterModel.LastName,
             Email = userRegisterModel.Email,
-            PasswordHash = passwordService.HashPassword(userRegisterModel.Password),
-            UserType = UserType.Student
+            PasswordHash = passwordService.HashPassword(userRegisterModel.Password)
         };
+        
 
         await _appDbContext.Users.AddAsync(userEntity);
         await _appDbContext.SaveChangesAsync();
@@ -96,10 +97,7 @@ public class UserService : IUserService
         var user = await _appDbContext.Users
             .FirstOrDefaultAsync(u => u.Id == userId);
 
-        if (user == null)
-        {
-            throw new KeyNotFoundException();
-        }
+        Validator.ThrowIfNull(user);
         
         var userModel = new UserModel
         {
@@ -108,12 +106,25 @@ public class UserService : IUserService
             FirstName = user.FirstName,
             MiddleName = user.MiddleName,
             LastName = user.LastName,
-            UserType = user.UserType
+            UserTypes = user.UserTypes
         };
 
         return userModel;
     }
+    public async Task<UserRolesModel> GetUserRoles(Guid userId)
+    {
+        var user = await _appDbContext.Users
+            .FirstOrDefaultAsync(u => u.Id == userId);
 
+        Validator.ThrowIfNull(user);
+
+        var userRolesModel = new UserRolesModel
+        {
+            UserTypes = user.UserTypes
+        };
+
+        return userRolesModel;
+    }
     public async Task EditProfile(Guid id, UserEditModel userEditModel)
     {
         var passwordService = new PasswordService();

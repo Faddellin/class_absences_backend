@@ -29,7 +29,7 @@ public static class Validator
     }
     public static void ThrowIfNotEnoughAccess(UserType userType, UserType targetUserType)
     {
-        if (UserAccess.GetUserAccesLevel(userType) < UserAccess.GetUserAccesLevel(targetUserType))
+        if (UserAccess.GetUserAccesLevel(userType) <= UserAccess.GetUserAccesLevel(targetUserType))
         {
             throw new AccessViolationException("User doesn't have enough rights");
         }

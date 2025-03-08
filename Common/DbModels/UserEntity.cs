@@ -10,7 +10,7 @@ public class UserEntity
     public string LastName { get; set; }
     public string Email { get; set; }
     public string PasswordHash { get; set; }
-    public UserType UserType { get; set; }
+    public List<UserType> UserTypes { get; set; } = new List<UserType>() { UserType.Student};
     public string? RefreshToken { get; set; }
     public DateTime? RefreshTokenExpiryDate { get; set; }
 }

@@ -43,7 +43,7 @@ public class ReportService : IReportService
 
         UserEntity? userEntity = await _appDbContext.Users.FirstOrDefaultAsync(o => o.Id == userId);
         Validator.ThrowIfNull(userEntity);
-        Validator.ThrowIfNotEnoughAccess(userEntity.UserType, 1);
+        Validator.ThrowIfNotEnoughAccess(userEntity.UserTypes.Max(), 1);
         Validator.ThrowIfFirstDateHigherThanSecond(dateFrom, dateTo);
 
         List<UserEntity>? targetUserEntity = await _appDbContext.Users.Where(o => targetUserId.Contains(o.Id)).ToListAsync();
@@ -52,6 +52,14 @@ public class ReportService : IReportService
         if (missingIds.Any())
         {
             throw new KeyNotFoundException($"Users with IDs ({string.Join(", ", missingIds)}) are not found");
+        }
+
+        foreach (var user in targetUserEntity)
+        {
+            if (!user.UserTypes.Contains(UserType.Student))
+            {
+                throw new ArgumentException($"User with ID ({user.Id}) are not a student");
+            }
         }
         
         List<Pair<UserEntity, List<RequestEntity>>> pairsOfUserAndTheirAsences = new List<Pair<UserEntity, List<RequestEntity>>>();
@@ -80,10 +88,10 @@ public class ReportService : IReportService
     {
         var user = await _appDbContext.Users.FindAsync(userId);
         Validator.ThrowIfNull(user);
-        Validator.ThrowIfNotEnoughAccess(user.UserType, 1);
+        Validator.ThrowIfNotEnoughAccess(user.UserTypes.Max(), 1);
 
         var users = await _appDbContext.Users
-            .Where(u => u.UserType != UserType.Admin).ToListAsync();
+            .Where(u => !u.UserTypes.Contains(UserType.Admin)).ToListAsync();
         var userModels = new UserListModel
         {
             UsersList = []
@@ -97,7 +105,7 @@ public class ReportService : IReportService
                 Id = userEntity.Id,
                 LastName = userEntity.LastName,
                 MiddleName = userEntity.MiddleName,
-                UserType = userEntity.UserType
+                UserTypes = userEntity.UserTypes
             };
             userModels.UsersList?.Add(userModel);
         }
@@ -123,25 +131,7 @@ public class ReportService : IReportService
                 UserEntity user = userAbsencesPair.First;
                 List<RequestEntity>? userAbsences = userAbsencesPair.Second;
 
-                string userType = "";
-
-                switch (user.UserType)
-                {
-                    case UserType.Student:
-                        userType = "Студент";
-                        break;
-                    case UserType.Teacher:
-                        userType = "Преподаватель";
-                        break;
-                    case UserType.Dean:
-                        userType = "Декан";
-                        break;
-                    case UserType.Admin:
-                        userType = "Admin";
-                        break;
-                }
-
-                userType += $" {user.FirstName} {user.MiddleName} {user.LastName}.";
+                string userType = "Студент" + $" {user.FirstName} {user.MiddleName} {user.LastName}.";
 
                 AddParagraphToBody(body, userType, "28");
 
