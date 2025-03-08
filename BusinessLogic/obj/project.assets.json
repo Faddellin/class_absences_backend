@@ -4057,19 +4057,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Faddellin\\.nuget\\packages\\": {}
+    "C:\\Users\\а\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Faddellin\\MyCodes\\TSU_4_S\\class_absences_backend\\BusinessLogic\\BusinessLogic.csproj",
+      "projectUniqueName": "C:\\Users\\а\\RiderProjects\\class_absences_backend\\BusinessLogic\\BusinessLogic.csproj",
       "projectName": "BusinessLogic",
-      "projectPath": "C:\\Users\\Faddellin\\MyCodes\\TSU_4_S\\class_absences_backend\\BusinessLogic\\BusinessLogic.csproj",
-      "packagesPath": "C:\\Users\\Faddellin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Faddellin\\MyCodes\\TSU_4_S\\class_absences_backend\\BusinessLogic\\obj\\",
+      "projectPath": "C:\\Users\\а\\RiderProjects\\class_absences_backend\\BusinessLogic\\BusinessLogic.csproj",
+      "packagesPath": "C:\\Users\\а\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\а\\RiderProjects\\class_absences_backend\\BusinessLogic\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Faddellin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\а\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4077,14 +4077,15 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\Faddellin\\MyCodes\\TSU_4_S\\class_absences_backend\\Common\\Common.csproj": {
-              "projectPath": "C:\\Users\\Faddellin\\MyCodes\\TSU_4_S\\class_absences_backend\\Common\\Common.csproj"
+            "C:\\Users\\а\\RiderProjects\\class_absences_backend\\Common\\Common.csproj": {
+              "projectPath": "C:\\Users\\а\\RiderProjects\\class_absences_backend\\Common\\Common.csproj"
             }
           }
         }
@@ -4177,7 +4178,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
       }
     }
   },
@@ -4186,7 +4187,7 @@
       "code": "NU1903",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "У пакета \"SixLabors.ImageSharp\" 3.1.6 есть известная уязвимость https://github.com/advisories/GHSA-2cmq-823j-5qj8 (уровень серьезности: высокий уровень)",
+      "message": "Package 'SixLabors.ImageSharp' 3.1.6 has a known high severity vulnerability, https://github.com/advisories/GHSA-2cmq-823j-5qj8",
       "libraryId": "SixLabors.ImageSharp",
       "targetGraphs": [
         "net8.0"

@@ -163,7 +163,7 @@ public class UserController : ControllerBase
     /// <response code="401">Unauthorized</response>
     /// <response code="404">Not found</response>
     /// <response code="500">InternalServerError</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserModel))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserRolesModel))]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = null!)]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = null!)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseModel))]
@@ -174,6 +174,28 @@ public class UserController : ControllerBase
         var userId = (Guid)HttpContext.Items["userId"];
 
         UserRolesModel doctorModel = await _userService.GetUserRoles(userId);
+
+        return Ok(doctorModel);
+    }
+    
+    /// <summary>
+    /// Get user information
+    /// </summary>
+    /// <response code="200">Success</response>
+    /// <response code="401">Unauthorized</response>
+    /// <response code="404">Not found</response>
+    /// <response code="500">InternalServerError</response>
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserFullModel))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = null!)]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = null!)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseModel))]
+    [Authorize]
+    [HttpGet("profile/{targetUserId:guid}")]
+    public async Task<ActionResult<UserFullModel>> GetUserInformation([FromRoute] Guid targetUserId)
+    {
+        var userId = (Guid)HttpContext.Items["userId"];
+
+        var doctorModel = await _userService.GetUserInformation(userId, targetUserId);
 
         return Ok(doctorModel);
     }
