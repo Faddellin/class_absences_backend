@@ -29,7 +29,7 @@ public class UserService : IUserService
 
         if (user != null)
         {
-            throw new Exception("User with such Email already exists");
+            throw new ArgumentException("User with such Email already exists");
         }
 
         var passwordService = new PasswordService();
