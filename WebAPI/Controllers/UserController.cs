@@ -208,14 +208,14 @@ public class UserController : ControllerBase
     /// <response code="401">Unauthorized</response>
     /// <response code="404">Not found</response>
     /// <response code="500">InternalServerError</response>
-    [ProducesResponseType(StatusCodes.Status200OK, Type = null!)]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseModel))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = null!)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = null!)]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = null!)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ResponseModel))]
     [Authorize]
     [HttpPut("profile")]
-    public async Task<IActionResult> ChangeProfile([FromBody] UserEditModel model)
+    public async Task<ActionResult<ResponseModel>> ChangeProfile([FromBody] UserEditModel model)
     {
         var userId = (Guid)HttpContext.Items["userId"];
         
@@ -234,6 +234,10 @@ public class UserController : ControllerBase
         }
 
         await _userService.EditProfile(userId, model);
-        return Ok();
+        return Ok(new ResponseModel
+        {
+            Status = "200",
+            Message = "Profile was successfully changed"
+        });
     }
 }
