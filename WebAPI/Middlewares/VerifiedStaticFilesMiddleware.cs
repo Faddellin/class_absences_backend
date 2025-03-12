@@ -27,7 +27,14 @@ public class VerifiedStaticFilesMiddleware
             
             var token = context.Request.Headers.Authorization.ToString().Replace("Bearer ", "");
             var userId = await tokenService.GetUserIdFromToken(token);
-            var userRole = await tokenService.GetUserRoleFromToken(token);
+            var user = await appDbContext.Users.FindAsync(userId);
+            
+            if (user == null)
+            {
+                throw new KeyNotFoundException("User was not found");
+            }
+
+            var userRoles = user.UserTypes;
 
             var fileName = Path.GetFileName(context.Request.Path);
             var request = await appDbContext.Requests
@@ -39,8 +46,10 @@ public class VerifiedStaticFilesMiddleware
                 return;
             }
 
-            if (userRole == UserType.Student && request.User.Id != userId ||
-                userRole == UserType.Teacher && request.User.Id != userId)
+            if (userRoles.Contains(UserType.Student) && !userRoles.Contains(UserType.Dean) && 
+                !userRoles.Contains(UserType.Admin) && request.User.Id != userId ||
+                userRoles.Contains(UserType.Teacher) && !userRoles.Contains(UserType.Dean) && 
+                !userRoles.Contains(UserType.Admin) && request.User.Id != userId )
             {
                 context.Response.StatusCode = 403;
                 return;

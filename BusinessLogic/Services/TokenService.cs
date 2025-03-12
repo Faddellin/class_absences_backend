@@ -96,24 +96,6 @@ public class TokenService : ITokenService
         return userId;
     }
 
-    public Task<UserType> GetUserRoleFromToken(string strToken)
-    {
-        var payload = DecodeTokenPayload(strToken);
-        if (payload == null)
-        {
-            throw new KeyNotFoundException("Incorrect token");
-        }
-
-        var role = payload.role;
-        if (role == null)
-        {
-            throw new KeyNotFoundException("Incorrect token");
-        }
-
-        var result = Enum.TryParse(role, out UserType userRole);
-        return Task.FromResult(result ? userRole : UserType.Student);
-    }
-
     public async Task<Guid> GetTokenIdFromToken(string strToken)
     {
         var payload = DecodeTokenPayload(strToken);
