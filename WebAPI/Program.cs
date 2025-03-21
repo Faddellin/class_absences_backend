@@ -127,6 +127,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowAll");
 
+
+string pathToImages = Path.Combine(builder.Environment.ContentRootPath, "static/images/reasons");
+
+if (!Directory.Exists(pathToImages))
+{
+    Directory.CreateDirectory(pathToImages);
+}
+
 //app.UseVerifiedStaticFiles();
 app.UseStaticFiles(new StaticFileOptions
 {
