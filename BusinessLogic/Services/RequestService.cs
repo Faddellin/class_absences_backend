@@ -33,6 +33,11 @@ public class RequestService : IRequestService
 
         Validator.ThrowIfRequestIntersectAnyOtherRequest(requestCreateModel, userRequests);
 
+        if (!userEntity.UserTypes.Contains(UserType.Student))
+        {
+            throw new AccessViolationException("You aren't a student");
+        }
+
         var fileNames = await CreatePhotoFiles(formFiles);
 
         RequestEntity newRequest = new RequestEntity()

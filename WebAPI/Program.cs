@@ -6,6 +6,7 @@ using class_absences_backend;
 using class_absences_backend.Jobs;
 using class_absences_backend.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Timeouts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
@@ -109,6 +110,11 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Services.AddRequestTimeouts(options => {
+    options.DefaultPolicy =
+        new RequestTimeoutPolicy { Timeout = TimeSpan.FromMilliseconds(1) };
+});
+
 var app = builder.Build();
 
 app.UseCustomExtensionsHandler();
@@ -121,7 +127,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowAll");
 
-app.UseVerifiedStaticFiles();
+//app.UseVerifiedStaticFiles();
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(

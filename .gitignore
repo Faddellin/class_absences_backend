@@ -4,6 +4,8 @@
 ## Get latest from `dotnet new gitignore`
 
 /WebAPI/appsettings.json
+/WebAPI/static/images/reasons/*
+
 
 # dotenv files
 .env

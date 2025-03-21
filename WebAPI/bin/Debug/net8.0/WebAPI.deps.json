@@ -992,10 +992,7 @@
           "jose-jwt": "5.1.1"
         },
         "runtime": {
-          "BusinessLogic.dll": {
-            "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
-          }
+          "BusinessLogic.dll": {}
         }
       },
       "Common/1.0.0": {
@@ -1011,10 +1008,7 @@
           "jose-jwt": "5.1.1"
         },
         "runtime": {
-          "Common.dll": {
-            "assemblyVersion": "1.0.0",
-            "fileVersion": "1.0.0.0"
-          }
+          "Common.dll": {}
         }
       }
     }
