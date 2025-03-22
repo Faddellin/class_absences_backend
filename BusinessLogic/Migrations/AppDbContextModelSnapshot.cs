@@ -62,7 +62,7 @@ namespace BusinessLogic.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Requests");
+                    b.ToTable("Requests", (string)null);
                 });
 
             modelBuilder.Entity("Common.DbModels.UserEntity", b =>
@@ -102,7 +102,7 @@ namespace BusinessLogic.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Common.DbModels.RequestEntity", b =>
