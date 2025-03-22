@@ -44,7 +44,6 @@ builder.Services.AddDbContext<AppDbContext>(
         options.UseNpgsql(configuration.GetConnectionString(nameof(AppDbContext)));
     });
 
-
 builder.Services.AddBusinessLogic();
 builder.Services.AddScoped<TokenValidationFilter>();
 

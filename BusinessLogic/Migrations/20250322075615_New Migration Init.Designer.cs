@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BusinessLogic.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250223160442_ReasonEntityChanged")]
-    partial class ReasonEntityChanged
+    [Migration("20250322075615_New Migration Init")]
+    partial class NewMigrationInit
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,39 +25,6 @@ namespace BusinessLogic.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("Common.DbModels.ReasonEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("DateFrom")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime>("DateTo")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.PrimitiveCollection<List<string>>("Images")
-                        .HasColumnType("text[]");
-
-                    b.Property<string>("ReasonType")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Reasons");
-                });
 
             modelBuilder.Entity("Common.DbModels.RequestEntity", b =>
                 {
@@ -71,15 +38,19 @@ namespace BusinessLogic.Migrations
                     b.Property<DateTime>("AbsenceDateTo")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid?>("CheckerId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreateTime")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("LessonName")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("ReasonId")
-                        .HasColumnType("uuid");
+                    b.PrimitiveCollection<List<string>>("Images")
+                        .IsRequired()
+                        .HasColumnType("text[]");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -90,7 +61,7 @@ namespace BusinessLogic.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReasonId");
+                    b.HasIndex("CheckerId");
 
                     b.HasIndex("UserId");
 
@@ -128,31 +99,20 @@ namespace BusinessLogic.Migrations
                     b.Property<DateTime?>("RefreshTokenExpiryDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("UserType")
+                    b.PrimitiveCollection<int[]>("UserTypes")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("integer[]");
 
                     b.HasKey("Id");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Common.DbModels.ReasonEntity", b =>
-                {
-                    b.HasOne("Common.DbModels.UserEntity", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Common.DbModels.RequestEntity", b =>
                 {
-                    b.HasOne("Common.DbModels.ReasonEntity", "Reason")
+                    b.HasOne("Common.DbModels.UserEntity", "Checker")
                         .WithMany()
-                        .HasForeignKey("ReasonId");
+                        .HasForeignKey("CheckerId");
 
                     b.HasOne("Common.DbModels.UserEntity", "User")
                         .WithMany()
@@ -160,7 +120,7 @@ namespace BusinessLogic.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Reason");
+                    b.Navigation("Checker");
 
                     b.Navigation("User");
                 });
