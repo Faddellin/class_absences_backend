@@ -13,8 +13,10 @@
 ## Содержание
 - [Технологии](#технологии)
 - [Установка](#установка)
+- [Документация](#документация)
+- [Требования](#требования)
 - [Команда проекта](#команда-проекта)
-
+  
 ## Технологии
 - [ASP.NET Core](https://learn.microsoft.com/)
 - [PostgreSQL](https://www.postgresql.org/)
@@ -27,7 +29,7 @@
 git clone https://github.com/Faddellin/class_absences_backend.git
 ```
 
-Создайте в данной директории class_absences_backend/WebAPI/ файл appsettings.json и вставьте данный код:
+Создайте в директории class_absences_backend/WebAPI/ файл appsettings.json и вставьте данный код (При необходимости можно изменить настройки приложения):
 ```json
 {
   "Logging": {
@@ -67,26 +69,30 @@ git clone https://github.com/Faddellin/class_absences_backend.git
 }
 ```
 
-Перейдите в папку библиотеки классов BusinessLogic проекта:
+Перейдите в папку решения:
 ```sh
-cd class_absences_backend/BusinessLogic/
+cd class_absences_backend/
 ```
 
 Выполните миграцию базы данных:
 ```sh
-dotnet ef database update
+dotnet ef database update -p ./BusinessLogic/ -s ./WebAPI/ 
 ```
 
-Перейдите в папку WebAPI и запустите проект:
+Запустите проект:
 ```sh
-cd ../WebAPI
-dotnet run
+dotnet run -p ./WebAPI/
 ```
 
 
 ### Требования
 Для работы проекта необходим [PostgreSQL](https://www.postgresql.org/download/).
 
+
+### Документация
+После запуска приложения, его можно протестировать, а также посмотреть документацию через swagger ui.
+
+Базовый путь, если appsettings.json не был изменен: [http:/localhost:5693/swagger/index.html](http:/localhost:5693/swagger/index.html)
 
 ## Команда проекта
 - [Беловодченко Кирилл](https://github.com/Faddellin)
