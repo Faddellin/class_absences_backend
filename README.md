@@ -79,6 +79,11 @@ cd class_absences_backend/
 dotnet ef database update -p ./BusinessLogic/ -s ./WebAPI/ 
 ```
 
+Забилдите проект:
+```sh
+dotnet build
+```
+
 Запустите проект:
 ```sh
 dotnet run -p ./WebAPI/
